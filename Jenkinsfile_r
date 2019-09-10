@@ -27,6 +27,9 @@ pipeline {
 
     stage('Build') {
       steps {
+        sh 'echo $WORKSPACE'
+        sh 'ls'
+        sh 'pwd'
 	sh 'echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin'
 	sh '$WORKSPACE/bin/dr_build.sh'
 	sh '$WORKSPACE/bin/dr_push.sh'
