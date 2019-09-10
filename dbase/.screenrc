@@ -1,0 +1,6 @@
+screen 0 bash
+split -v
+title 0
+focus
+screen 1 bash
+title 1
