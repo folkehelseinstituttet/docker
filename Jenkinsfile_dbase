@@ -4,16 +4,9 @@ pipeline {
     stage('Build') {
       steps {
 	sh 'echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin'
-        //slackSend(channel: '#jenkins', message: 'Building.')
-        sh '''ls
-pwd
-echo $WORKSPACE
-ls $WORKSPACE
-'''
+	sh '$WORKSPACE/bin/dbase_build.sh'
+	sh '$WORKSPACE/bin/dbase_push.sh'
       }
     }
-  }
-  environment {
-    CI_PWD = '/var/lib/jenkins/workspace/dashboards/'
   }
 }
