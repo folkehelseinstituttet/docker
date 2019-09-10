@@ -3,6 +3,7 @@ pipeline {
   stages {
 
     stage('Checkout') {
+      steps {
 	 // Get CalibrationResults from GitHub
 	 checkout([  
             $class: 'GitSCM', 
@@ -21,6 +22,7 @@ pipeline {
             submoduleCfg: [], 
             userRemoteConfigs: [[url: 'https://github.com/folkehelseinstituttet/drat.git']]
         ])
+      }
     }
 
     stage('Build') {
