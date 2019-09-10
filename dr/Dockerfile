@@ -1,5 +1,5 @@
 ARG RVERSION=RVERSION
-FROM raw996/dbase:${RVERSION}
+FROM fhix/dbase:${RVERSION}
 MAINTAINER "Carl Boettiger and Dirk Eddelbuettel" rocker-maintainers@eddelbuettel.com
 
 # DRAT PACKAGES FROM EUROMOMO
