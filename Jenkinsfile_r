@@ -1,6 +1,28 @@
 pipeline {
   agent any
   stages {
+
+    stage('Checkout') {
+	 // Get CalibrationResults from GitHub
+	 checkout([  
+            $class: 'GitSCM', 
+            branches: [[name: 'refs/heads/master']], 
+            doGenerateSubmoduleConfigurations: false, 
+            extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'docker']], 
+            submoduleCfg: [], 
+            userRemoteConfigs: [[url: 'https://github.com/folkehelseinstituttet/docker.git']]
+        ])
+	// Get Combination from GitHub
+	 checkout([  
+            $class: 'GitSCM', 
+            branches: [[name: 'refs/heads/gh-pages']], 
+            doGenerateSubmoduleConfigurations: false, 
+            extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'drat']], 
+            submoduleCfg: [], 
+            userRemoteConfigs: [[url: 'https://github.com/folkehelseinstituttet/drat.git']]
+        ])
+    }
+
     stage('Build') {
       steps {
 	sh 'echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin'
