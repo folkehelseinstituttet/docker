@@ -203,7 +203,8 @@ RUN . /etc/environment \
     SDMTools \
     ncdf4 \
     huxtable \
-    svglite
+    svglite \
+    shinydashboard
 
 RUN R -e "blogdown::install_hugo()"
 
