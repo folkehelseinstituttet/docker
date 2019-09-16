@@ -58,7 +58,8 @@ RUN tlmgr install \
   mathpazo \
   fpl \
   babel-norsk \
-  hyphen-norwegian
+  hyphen-norwegian \
+  siunitx
 
 RUN texhash
 
@@ -204,7 +205,9 @@ RUN . /etc/environment \
     ncdf4 \
     huxtable \
     svglite \
-    shinydashboard
+    shinydashboard \
+    rsvg \
+    missRanger
 
 RUN R -e "blogdown::install_hugo()"
 
