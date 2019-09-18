@@ -207,7 +207,13 @@ RUN . /etc/environment \
     svglite \
     shinydashboard \
     rsvg \
-    missRanger
+    missRanger \
+    drc \
+    DescTools \
+    ppcor \
+    corpcor \
+    GeneNet \
+    ggpubr
 
 RUN R -e "blogdown::install_hugo()"
 
