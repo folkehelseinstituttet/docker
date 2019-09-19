@@ -25,6 +25,7 @@ RUN . /etc/environment \
   sykdomspulslog \
   sykdomspulspdf \
   noispiah \
+  ui \
   smhb \
   spread
 
