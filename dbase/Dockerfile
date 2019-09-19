@@ -214,7 +214,10 @@ RUN . /etc/environment \
     corpcor \
     GeneNet \
     ggpubr \
+    asbio \
+    samplingbook \
     writexl
+
 
 RUN R -e "blogdown::install_hugo()"
 
