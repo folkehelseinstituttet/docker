@@ -29,3 +29,5 @@ RUN . /etc/environment \
   smhb \
   spread
 
+# TEMPORARY SOLUTIONS UNTIL THE PACKAGE MAKES ITS WAY TO CRAN
+RUN R -e 'devtools::install_github("hughjonesd/huxtable", ref="114c8ff")'
