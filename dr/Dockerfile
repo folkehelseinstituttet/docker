@@ -30,6 +30,7 @@ RUN . /etc/environment \
   sykdomspulslog \
   sykdomspulspdf \
   noispiah \
+  brain \
   ui \
   smhb
  
