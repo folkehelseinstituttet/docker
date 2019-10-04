@@ -23,6 +23,7 @@ RUN . /etc/environment \
   fhiplot \
   fhi \
   spread \
+  attrib \
   fd \
   sykdomspuls \
   normomo \
