@@ -217,7 +217,9 @@ RUN . /etc/environment \
     asbio \
     samplingbook \
     writexl \
-    dlnm
+    dlnm \
+    mvmeta \
+    pbs
 
 
 RUN R -e "blogdown::install_hugo()"
