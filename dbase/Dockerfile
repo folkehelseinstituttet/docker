@@ -59,7 +59,8 @@ RUN tlmgr install \
   fpl \
   babel-norsk \
   hyphen-norwegian \
-  siunitx
+  siunitx \
+  pgf
 
 RUN texhash
 
