@@ -28,7 +28,6 @@ RUN . /etc/environment \
   sykdomspuls \
   normomo \
   sykdomspulslog \
-  sykdomspulspdf \
   noispiah \
   brain \
   ui \
