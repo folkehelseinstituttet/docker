@@ -61,6 +61,7 @@ RUN tlmgr install \
   hyphen-norwegian \
   siunitx \
   pgf
+RUN tlmgr update --all
 
 RUN texhash
 
