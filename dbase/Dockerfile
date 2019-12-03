@@ -76,7 +76,7 @@ RUN apt-get update && apt-get install -y libjq-dev
 RUN apt-get update && apt-get install -y libssl-dev
 RUN apt-get update && apt-get install -y libomp-dev
 RUN apt-get update && apt-get install -y tk dvipng
-RUN apt-get update && apt-get install -y cargo libnetcdf-dev netcdf-bin
+RUN apt-get update && apt-get install -y cargo libnetcdf-dev netcdf-bin libsodium-dev
 
 # libreoffice
 RUN apt-get update && apt-get install -y libreoffice
@@ -221,7 +221,8 @@ RUN . /etc/environment \
     writexl \
     dlnm \
     mvmeta \
-    pbs
+    pbs \
+    epitrix
 
 
 RUN R -e "blogdown::install_hugo()"
