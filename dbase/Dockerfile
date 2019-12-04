@@ -83,6 +83,15 @@ RUN apt-get update && apt-get install -y libreoffice
 RUN sudo echo /usr/lib/libreoffice/program/ >> /etc/ld.so.conf.d/local.conf
 RUN /sbin/ldconfig
 
+## Kerberos for SQL server auth
+
+RUN apt-get install --yes apt-transport-https curl gnupg \
+&& curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+&& curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+&& apt-get update \
+&& ACCEPT_EULA=Y apt-get install --yes --no-install-recommends msodbcsql17 \
+&& DEBIAN_FRONTEND=noninteractive apt-get -yqq install krb5-user libpam-krb5
+
 # data.table doesn't like clang
 RUN . /etc/environment \ 
   && install2.r --error --repos $MRAN \
