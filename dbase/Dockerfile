@@ -241,7 +241,9 @@ RUN cd /tmp; sudo cp mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit/lib/lib
 
 RUN sudo /tmp/mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit/bin/myodbc-installer -d -a -n "MySQL" -t "DRIVER=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8w.so;Setup=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8S.so;"
 
-RUN apt-get install --yes apt-transport-https \
+## Kerberos for SQL server auth
+
+RUN apt-get install --yes apt-transport-https curl gnupg \
   && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list \
   && apt-get update \
