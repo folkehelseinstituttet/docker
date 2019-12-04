@@ -31,7 +31,8 @@ RUN . /etc/environment \
   noispiah \
   brain \
   ui \
-  smhb
+  smhb \
+  flumomo
  
 
 # TEMPORARY SOLUTIONS UNTIL THE PACKAGE MAKES ITS WAY TO CRAN
