@@ -248,7 +248,7 @@ RUN apt-get install --yes apt-transport-https curl gnupg \
   && curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list \
   && apt-get update \
   && ACCEPT_EULA=Y apt-get install --yes --no-install-recommends msodbcsql17 \
-  && apt-get -yqq install krb5-user libpam-krb5
+  && DEBIAN_FRONTEND=noninteractive apt-get -yqq install krb5-user libpam-krb5
 
 ## NEWER STUFF THAT NEEDS TO BE INSTALLED FROM GITHUB
 #RUN R -e "devtools::install_github('Appsilon/shiny.router',ref='7d9bc757ea31a1fe8faea6a5817c8adda97a0be0')"
