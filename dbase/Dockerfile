@@ -222,7 +222,8 @@ RUN . /etc/environment \
     dlnm \
     mvmeta \
     pbs \
-    epitrix
+    epitrix \
+    gh
 
 
 RUN R -e "blogdown::install_hugo()"
