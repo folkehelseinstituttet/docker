@@ -8,6 +8,15 @@ RUN ln -s /usr/local/lib/R/site-library/ /r
 # allow 'rstudio' as password
 RUN sed -i '/exit 1/d' /etc/cont-init.d/userconf
 
+## Kerberos for SQL server auth
+
+RUN apt-get install --yes apt-transport-https curl gnupg \
+  && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+  && curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+  && apt-get update \
+  && ACCEPT_EULA=Y apt-get install --yes --no-install-recommends msodbcsql17 \
+  && DEBIAN_FRONTEND=noninteractive apt-get -yqq install krb5-user libpam-krb5
+
 # tinytex 
 #RUN R -e "tinytex::install_tinytex()"
 RUN echo PATH=$PATH >> /etc/profile
@@ -241,15 +250,6 @@ RUN cd /tmp; tar -xvf /tmp/mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit.t
 RUN cd /tmp; sudo cp mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit/lib/libmyodbc8* /usr/lib/x86_64-linux-gnu/odbc/
 
 RUN sudo /tmp/mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit/bin/myodbc-installer -d -a -n "MySQL" -t "DRIVER=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8w.so;Setup=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8S.so;"
-
-## Kerberos for SQL server auth
-
-RUN apt-get install --yes apt-transport-https curl gnupg \
-  && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-  && curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list \
-  && apt-get update \
-  && ACCEPT_EULA=Y apt-get install --yes --no-install-recommends msodbcsql17 \
-  && DEBIAN_FRONTEND=noninteractive apt-get -yqq install krb5-user libpam-krb5
 
 ## NEWER STUFF THAT NEEDS TO BE INSTALLED FROM GITHUB
 #RUN R -e "devtools::install_github('Appsilon/shiny.router',ref='7d9bc757ea31a1fe8faea6a5817c8adda97a0be0')"
