@@ -21,6 +21,7 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
 
 # other database stuff
 RUN apt-get install -y unixodbc unixodbc-dev
+RUN mkdir -p /usr/lib/x86_64-linux-gnu/odbc/
 COPY mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit.tar.gz /tmp/mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit.tar.gz
 RUN cd /tmp; tar -xvf /tmp/mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit.tar.gz
 RUN cd /tmp; sudo cp mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit/lib/libmyodbc8* /usr/lib/x86_64-linux-gnu/odbc/
