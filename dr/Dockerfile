@@ -20,6 +20,7 @@ RUN . /etc/environment \
 RUN . /etc/environment \ 
   && install2.r --error \
   fhidata \
+  plnr \
   fhiplot \
   fhi \
   spread \
