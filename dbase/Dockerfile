@@ -234,7 +234,10 @@ RUN . /etc/environment \
     mvmeta \
     pbs \
     epitrix \
-    gh
+    gh \
+    future \
+    future.callr \
+    future.apply
 
 
 RUN R -e "blogdown::install_hugo()"
