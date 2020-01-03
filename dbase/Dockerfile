@@ -38,7 +38,8 @@ RUN dpkg -i /tmp/fonts-ubuntu_0.83-4_all.deb
 
 # tinytex needed packages
 RUN tlmgr option repository http://ctan.uib.no/systems/texlive/tlnet
-RUN tlmgr update --self
+# RUN tlmgr update --self
+RUN update-tlmgr-latest --update
 RUN apt-get install -y xzdec
 RUN tlmgr init-usertree
 RUN tlmgr install \
