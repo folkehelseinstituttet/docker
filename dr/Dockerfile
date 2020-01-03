@@ -39,4 +39,4 @@ RUN . /etc/environment \
 # TEMPORARY SOLUTIONS UNTIL THE PACKAGE MAKES ITS WAY TO CRAN
 RUN R -e 'devtools::install_github("hughjonesd/huxtable", ref="114c8ff")'
 RUN R -e 'devtools::install_github("thlytras/FluMoDL")'
-
+RUN R -e 'install.packages("data.table", type = "source", repos = "https://Rdatatable.gitlab.io/data.table")'
