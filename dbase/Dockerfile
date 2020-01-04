@@ -38,7 +38,10 @@ RUN dpkg -i /tmp/fonts-ubuntu_0.83-4_all.deb
 
 # tinytex needed packages
 RUN tlmgr option repository http://ctan.uib.no/systems/texlive/tlnet
-RUN tlmgr update --self
+COPY update-tlmgr-latest.sh /tmp/update-tlmgr-latest.sh
+RUN chmod 777 /tmp/update-tlmgr-latest.sh
+RUN sudo /tmp/update-tlmgr-latest.sh -- --upgrade
+# RUN tlmgr update --self
 # RUN wget --no-verbose http://mirror.ctan.org/systems/texlive/tlnet/update-tlmgr-latest.sh -O /tmp/update-tlmgr-latest.sh
 # RUN sudo /tmp/update-tlmgr-latest.sh --update
 
