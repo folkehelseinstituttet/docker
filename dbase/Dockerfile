@@ -27,6 +27,11 @@ RUN cd /tmp; tar -xvf /tmp/mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit.t
 RUN cd /tmp; sudo cp mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit/lib/libmyodbc8* /usr/lib/x86_64-linux-gnu/odbc/
 RUN sudo /tmp/mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit/bin/myodbc-installer -d -a -n "MySQL" -t "DRIVER=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8w.so;Setup=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8S.so;"
 
+# timezone
+# echo "TZ='Europe/Oslo'" >> /usr/local/lib/R/etc/Renviron
+RUN apt-get install -y tzdata
+ENV TZ="Europe/Oslo"
+
 # tinytex 
 RUN echo PATH=$PATH >> /etc/profile
 RUN echo export PATH >> /etc/profile
