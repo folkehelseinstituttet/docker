@@ -31,6 +31,7 @@ RUN sudo /tmp/mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit/bin/myodbc-ins
 # echo "TZ='Europe/Oslo'" >> /usr/local/lib/R/etc/Renviron
 RUN apt-get install -y tzdata
 ENV TZ="Europe/Oslo"
+RUN echo "TZ='Europe/Oslo'" >> /usr/local/lib/R/etc/Renviron
 
 # tinytex 
 RUN echo PATH=$PATH >> /etc/profile
