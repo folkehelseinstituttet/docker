@@ -16,6 +16,11 @@ RUN . /etc/environment \
   RAWmisc \
   org
 
+# TEMPORARY SOLUTIONS UNTIL THE PACKAGE MAKES ITS WAY TO CRAN
+RUN R -e 'devtools::install_github("hughjonesd/huxtable", ref="114c8ff")'
+RUN R -e 'devtools::install_github("thlytras/FluMoDL")'
+RUN R -e 'devtools::install_github("HenrikBengtsson/progressr")'
+
 ## DRAT PACKAGES FROM FHI
 RUN . /etc/environment \ 
   && install2.r --error \
@@ -36,8 +41,4 @@ RUN . /etc/environment \
   flumomo
  
 
-# TEMPORARY SOLUTIONS UNTIL THE PACKAGE MAKES ITS WAY TO CRAN
-RUN R -e 'devtools::install_github("hughjonesd/huxtable", ref="114c8ff")'
-RUN R -e 'devtools::install_github("thlytras/FluMoDL")'
-RUN R -e 'devtools::install_github("HenrikBengtsson/progressr")'
 # RUN R -e 'install.packages("data.table", type = "source", repos = "https://Rdatatable.gitlab.io/data.table")'
