@@ -27,16 +27,19 @@ RUN cd /tmp; tar -xvf /tmp/mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit.t
 RUN cd /tmp; sudo cp mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit/lib/libmyodbc8* /usr/lib/x86_64-linux-gnu/odbc/
 RUN sudo /tmp/mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit/bin/myodbc-installer -d -a -n "MySQL" -t "DRIVER=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8w.so;Setup=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8S.so;"
 
+# bcp for copying data directly to MSSQL
+RUN ACCEPT_EULA=Y DEBIAN_FRONTEND=noninteractive apt-get install --yes mssql-tools
+
 # timezone
 # echo "TZ='Europe/Oslo'" >> /usr/local/lib/R/etc/Renviron
 RUN apt-get install -y tzdata
-ENV TZ="Europe/Oslo"
+RUN echo "TZ='Europe/Oslo'" >> /etc/profile
 RUN echo "TZ='Europe/Oslo'" >> /usr/local/lib/R/etc/Renviron
 
-# tinytex 
-RUN echo PATH=$PATH >> /etc/profile
+# tinytex  and bcp
+RUN echo PATH="$PATH:/opt/mssql-tools/bin" >> /etc/profile
 RUN echo export PATH >> /etc/profile
-RUN echo Sys.setenv\(PATH=\"$PATH\"\) >> /usr/local/lib/R/etc/Rprofile.site
+RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> /usr/local/lib/R/etc/Rprofile.site
 
 # FONTS
 COPY fonts-ubuntu_0.83-4_all.deb /tmp/fonts-ubuntu_0.83-4_all.deb
