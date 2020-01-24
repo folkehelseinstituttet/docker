@@ -87,7 +87,12 @@ RUN tlmgr install \
   babel-norsk \
   hyphen-norwegian \
   siunitx \
-  pgf
+  pgf \
+  algorithms \
+  algorithmicx \
+  mathdesign \
+  ly1 \
+  charter
 RUN tlmgr update --all
 
 RUN texhash
