@@ -259,7 +259,9 @@ RUN . /etc/environment \
     future.callr \
     future.apply \
     pryr \
-    doFuture
+    doFuture \
+    pinp \
+    egg
 
 
 RUN R -e "blogdown::install_hugo()"
