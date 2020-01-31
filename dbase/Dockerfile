@@ -261,7 +261,8 @@ RUN . /etc/environment \
     pryr \
     doFuture \
     pinp \
-    egg
+    egg \
+    EpiEstim
 
 
 RUN R -e "blogdown::install_hugo()"
