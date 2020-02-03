@@ -22,7 +22,7 @@ RUN R -e 'devtools::install_github("thlytras/FluMoDL")'
 RUN R -e 'devtools::install_github("HenrikBengtsson/progressr")'
 
 # NEWER STUFF, TEMPORARILY INSTALLED
-RUN R -e 'install.packages(c("globals","listenv","future","foreach","doFuture", "pinp", "EpiEstim"), repos = "https://cran.rstudio.com")'
+RUN R -e 'install.packages(c("globals","listenv","future","foreach","doFuture", "pinp", "EpiEstim", "lemon"), repos = "https://cran.rstudio.com")'
 
 ## DRAT PACKAGES FROM FHI
 RUN . /etc/environment \ 
