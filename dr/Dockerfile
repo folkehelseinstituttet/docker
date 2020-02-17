@@ -16,10 +16,19 @@ RUN . /etc/environment \
   RAWmisc \
   org
 
+# TEMPORARY SOLUTIONS UNTIL THE PACKAGE MAKES ITS WAY TO CRAN
+RUN R -e 'devtools::install_github("hughjonesd/huxtable", ref="114c8ff")'
+RUN R -e 'devtools::install_github("thlytras/FluMoDL")'
+RUN R -e 'devtools::install_github("HenrikBengtsson/progressr")'
+
+# NEWER STUFF, TEMPORARILY INSTALLED
+RUN R -e 'install.packages(c("globals","listenv","future","foreach","doFuture", "pinp", "EpiEstim", "lemon"), repos = "https://cran.rstudio.com")'
+
 ## DRAT PACKAGES FROM FHI
 RUN . /etc/environment \ 
   && install2.r --error \
   fhidata \
+  plnr \
   fhiplot \
   fhi \
   spread \
@@ -31,10 +40,8 @@ RUN . /etc/environment \
   noispiah \
   brain \
   ui \
-  smhb
+  smhb \
+  flumomo
  
 
-# TEMPORARY SOLUTIONS UNTIL THE PACKAGE MAKES ITS WAY TO CRAN
-RUN R -e 'devtools::install_github("hughjonesd/huxtable", ref="114c8ff")'
-RUN R -e 'devtools::install_github("thlytras/FluMoDL")'
-
+# RUN R -e 'install.packages("data.table", type = "source", repos = "https://Rdatatable.gitlab.io/data.table")'

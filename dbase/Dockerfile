@@ -8,25 +8,52 @@ RUN ln -s /usr/local/lib/R/site-library/ /r
 # allow 'rstudio' as password
 RUN sed -i '/exit 1/d' /etc/cont-init.d/userconf
 
-# tinytex 
-#RUN R -e "tinytex::install_tinytex()"
-RUN echo PATH=$PATH >> /etc/profile
+# update
+RUN apt-get update -y
+
+## Kerberos for SQL server auth
+RUN apt-get install --yes apt-transport-https curl gnupg
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+  && curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+  && apt-get update \
+  && ACCEPT_EULA=Y apt-get install --yes --no-install-recommends msodbcsql17 \
+  && DEBIAN_FRONTEND=noninteractive apt-get -yqq install krb5-user libpam-krb5
+
+# other database stuff
+RUN apt-get install -y unixodbc unixodbc-dev
+RUN mkdir -p /usr/lib/x86_64-linux-gnu/odbc/
+COPY mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit.tar.gz /tmp/mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit.tar.gz
+RUN cd /tmp; tar -xvf /tmp/mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit.tar.gz
+RUN cd /tmp; sudo cp mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit/lib/libmyodbc8* /usr/lib/x86_64-linux-gnu/odbc/
+RUN sudo /tmp/mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit/bin/myodbc-installer -d -a -n "MySQL" -t "DRIVER=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8w.so;Setup=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8S.so;"
+
+# bcp for copying data directly to MSSQL
+RUN ACCEPT_EULA=Y DEBIAN_FRONTEND=noninteractive apt-get install --yes mssql-tools
+
+# timezone
+# echo "TZ='Europe/Oslo'" >> /usr/local/lib/R/etc/Renviron
+RUN apt-get install -y tzdata
+RUN echo "TZ='Europe/Oslo'" >> /etc/profile
+RUN echo "TZ='Europe/Oslo'" >> /usr/local/lib/R/etc/Renviron
+
+# tinytex  and bcp
+RUN echo PATH="$PATH:/opt/mssql-tools/bin" >> /etc/profile
 RUN echo export PATH >> /etc/profile
-RUN echo Sys.setenv\(PATH=\"$PATH\"\) >> /usr/local/lib/R/etc/Rprofile.site
-
-
-#RUN apt-get update && apt-get install -y \
-#        texlive-latex-recommended
+RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> /usr/local/lib/R/etc/Rprofile.site
 
 # FONTS
 COPY fonts-ubuntu_0.83-4_all.deb /tmp/fonts-ubuntu_0.83-4_all.deb
 RUN dpkg -i /tmp/fonts-ubuntu_0.83-4_all.deb
 
-RUN apt-get update -y
-
 # tinytex needed packages
 RUN tlmgr option repository http://ctan.uib.no/systems/texlive/tlnet
-RUN tlmgr update --self
+COPY update-tlmgr-latest.sh /tmp/update-tlmgr-latest.sh
+RUN chmod 777 /tmp/update-tlmgr-latest.sh
+RUN sudo /tmp/update-tlmgr-latest.sh -- --upgrade
+# RUN tlmgr update --self
+# RUN wget --no-verbose http://mirror.ctan.org/systems/texlive/tlnet/update-tlmgr-latest.sh -O /tmp/update-tlmgr-latest.sh
+# RUN sudo /tmp/update-tlmgr-latest.sh --update
+
 RUN apt-get install -y xzdec
 RUN tlmgr init-usertree
 RUN tlmgr install \
@@ -60,7 +87,12 @@ RUN tlmgr install \
   babel-norsk \
   hyphen-norwegian \
   siunitx \
-  pgf
+  pgf \
+  algorithms \
+  algorithmicx \
+  mathdesign \
+  ly1 \
+  charter
 RUN tlmgr update --all
 
 RUN texhash
@@ -123,7 +155,6 @@ RUN . /etc/environment \
     ggpubr \
     rio
 
-#RUN install2.r --error --repos https://www.math.ntnu.no/inla/R/stable --deps FALSE \
 #  INLA
 RUN R -e "install.packages('INLA', repos=c(getOption('repos'), INLA='https://inla.r-inla-download.org/R/stable'), dep=FALSE)"
 
@@ -231,24 +262,19 @@ RUN . /etc/environment \
     dlnm \
     mvmeta \
     pbs \
-    epitrix
+    epitrix \
+    gh \
+    future \
+    future.callr \
+    future.apply \
+    pryr \
+    doFuture \
+    pinp \
+    egg \
+    EpiEstim
 
 
 RUN R -e "blogdown::install_hugo()"
-
-# databases
-
-RUN apt-get update -y
-
-RUN apt-get install -y unixodbc unixodbc-dev
-
-COPY mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit.tar.gz /tmp/mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit.tar.gz
-
-RUN cd /tmp; tar -xvf /tmp/mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit.tar.gz
-
-RUN cd /tmp; sudo cp mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit/lib/libmyodbc8* /usr/lib/x86_64-linux-gnu/odbc/
-
-RUN sudo /tmp/mysql-connector-odbc-8.0.16-linux-debian9-x86-64bit/bin/myodbc-installer -d -a -n "MySQL" -t "DRIVER=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8w.so;Setup=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8S.so;"
 
 ## NEWER STUFF THAT NEEDS TO BE INSTALLED FROM GITHUB
 #RUN R -e "devtools::install_github('Appsilon/shiny.router',ref='7d9bc757ea31a1fe8faea6a5817c8adda97a0be0')"
@@ -283,7 +309,7 @@ COPY rsession.conf /etc/rstudio/rsession.conf
 
 ## ADD IN SHINY
 ENV ADD=shiny
-RUN wget --no-verbose https://raw.githubusercontent.com/rocker-org/rocker-versioned/master/rstudio/3.5.0/add_shiny.sh -O "add_shiny.sh" 
+RUN wget --no-verbose https://raw.githubusercontent.com/rocker-org/rocker-versioned/master/rstudio/add_shiny.sh -O "add_shiny.sh" 
 RUN sed -i -e "1d" add_shiny.sh
 RUN sed -i '1s/^/#!\/bin\/bash /' add_shiny.sh
 RUN chmod 777 add_shiny.sh
