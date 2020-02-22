@@ -307,3 +307,6 @@ RUN chmod 777 add_shiny.sh
 RUN /add_shiny.sh
 RUN rm /etc/cont-init.d/add
 COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
+
+# shiny for norwegian characters
+RUN echo "LANG=en_US.UTF-8" >> /home/shiny/.Renviron
