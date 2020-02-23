@@ -262,7 +262,8 @@ RUN . /etc/environment \
     doFuture \
     pinp \
     egg \
-    EpiEstim
+    EpiEstim \
+    icd10
 
 
 RUN R -e "blogdown::install_hugo()"
