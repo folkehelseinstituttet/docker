@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-	sh 'echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin'
+	//sh 'echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin'
 	sh '$WORKSPACE/bin/dbase_build.sh'
 	sh '$WORKSPACE/bin/dbase_push.sh'
       }
