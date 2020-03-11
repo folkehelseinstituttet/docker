@@ -42,6 +42,7 @@ RUN . /etc/environment \
   ui \
   smhb \
   flumomo
- 
+
+RUN touch /etc/xxx
 
 # RUN R -e 'install.packages("data.table", type = "source", repos = "https://Rdatatable.gitlab.io/data.table")'
