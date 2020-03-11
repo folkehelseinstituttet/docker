@@ -33,8 +33,8 @@ pipeline {
         sh 'ls'
         sh 'pwd'
         sh 'export PATH=$PATH:/home/jenkins/bin; echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin'
-	sh '$WORKSPACE/bin/dr_build.sh'
-	sh '$WORKSPACE/bin/dr_push.sh'
+	sh 'export PATH=$PATH:/home/jenkins/bin; $WORKSPACE/bin/dr_build.sh'
+	sh 'export PATH=$PATH:/home/jenkins/bin; $WORKSPACE/bin/dr_push.sh'
       }
     }
   }
