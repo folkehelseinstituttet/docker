@@ -3,7 +3,7 @@ FROM fhix/dbase:${RVERSION}
 MAINTAINER "Carl Boettiger and Dirk Eddelbuettel" rocker-maintainers@eddelbuettel.com
 
 #TEMPORARY
-RUN sed -i "/s/mran.microsoft.com/cran.microsoft.com/g" /usr/local/lib/R/etc/Rprofile.site
+RUN sed -i "s/mran.microsoft.com/cran.microsoft.com/g" /usr/local/lib/R/etc/Rprofile.site
 RUN R -e 'devtools::install_github("thlytras/FluMoDL")'
 
 # DRAT PACKAGES FROM EUROMOMO
