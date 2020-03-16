@@ -6,7 +6,7 @@ MAINTAINER "Carl Boettiger and Dirk Eddelbuettel" rocker-maintainers@eddelbuette
 RUN ln -s /usr/local/lib/R/site-library/ /r
 
 # allow 'rstudio' as password
-RUN sed -i '/exit 1/d' /etc/cont-init.d/userconf
+# RUN sed -i '/exit 1/d' /etc/cont-init.d/userconf
 
 # update
 RUN apt-get update -y
@@ -56,6 +56,7 @@ RUN sudo /tmp/update-tlmgr-latest.sh -- --upgrade
 
 RUN apt-get install -y xzdec
 RUN tlmgr init-usertree
+RUN tlmgr update --self
 RUN tlmgr install \
   svg \
   koma-script \
