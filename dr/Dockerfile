@@ -21,6 +21,7 @@ RUN . /etc/environment \
 RUN R -e 'devtools::install_github("hughjonesd/huxtable", ref="114c8ff")'
 RUN R -e 'devtools::install_github("thlytras/FluMoDL")'
 RUN R -e 'devtools::install_github("HenrikBengtsson/progressr")'
+RUN R -e 'devtools::install_github("rstudio/plumber")'
 
 # NEWER STUFF, TEMPORARILY INSTALLED
 RUN R -e 'install.packages(c("globals","listenv","future","foreach","doFuture", "pinp", "EpiEstim", "lemon"), repos = "https://cran.rstudio.com")'
