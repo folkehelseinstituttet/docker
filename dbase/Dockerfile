@@ -100,14 +100,31 @@ RUN sed -i "s/mran.microsoft.com/cran.microsoft.com/g" /usr/local/lib/R/etc/Rpro
 RUN sed -i "s/CRAN/folkehelseinstituttet=\'https:\\/\\/folkehelseinstituttet.github.io\\/drat\\/\',euromomo=\'https:\\/\\/euromomonetwork.github.io\\/drat\\/\',raubreywhite=\'https:\\/\\/raubreywhite.github.io\\/drat\\/\',CRAN/" /usr/local/lib/R/etc/Rprofile.site
 RUN sed -i "1s/^/dratRepo=\'\\/git\\/drat\\/\'\n/" /usr/local/lib/R/etc/Rprofile.site
 
-RUN apt-get update && apt-get install -y libgdal-dev libgeos-c1v5 libproj-dev libgsl0-dev libprotobuf-dev protobuf-compiler
-RUN apt-get update && apt-get install -y ncftp ftp cron sshpass
-RUN apt-get update && apt-get install -y libglu1-mesa-dev freeglut3-dev mesa-common-dev libudunits2-dev
-RUN apt-get update && apt-get install -y libjq-dev
-RUN apt-get update && apt-get install -y libssl-dev
-RUN apt-get update && apt-get install -y libomp-dev
-RUN apt-get update && apt-get install -y tk dvipng
-RUN apt-get update && apt-get install -y cargo libnetcdf-dev netcdf-bin libsodium-dev
+RUN apt-get update && apt-get install -y \
+  libgdal-dev \
+  libgeos-c1v5 \
+  libproj-dev \
+  libgsl0-dev \
+  libprotobuf-dev \
+  protobuf-compiler \
+  ncftp \
+  ftp \
+  cron \
+  sshpass \
+  libglu1-mesa-dev \
+  freeglut3-dev \
+  mesa-common-dev \
+  libudunits2-dev \
+  libjq-dev \
+  libssl-dev \
+  libomp-dev \
+  tk \
+  dvipng \
+  tk-dev \
+  cargo \
+  libnetcdf-dev \
+  netcdf-bin \
+  libsodium-dev
 
 # libreoffice
 RUN apt-get update && apt-get install -y libreoffice
@@ -229,8 +246,10 @@ RUN . /etc/environment \
     ppcor \
     corpcor \
     GeneNet \
-    ggpubr \
-    asbio \
+    ggpubr
+
+RUN . /etc/environment \ 
+  && install2.r --error --repos $MRAN --deps TRUE \
     samplingbook \
     writexl \
     dlnm \
@@ -248,7 +267,6 @@ RUN . /etc/environment \
     EpiEstim \
     epitrix \
     shinycssloaders
-
 
 RUN R -e "blogdown::install_hugo()"
 
