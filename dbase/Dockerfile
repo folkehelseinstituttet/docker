@@ -264,7 +264,9 @@ RUN . /etc/environment \
     doFuture \
     pinp \
     egg \
-    EpiEstim
+    EpiEstim \
+    epitrix \
+    shinycssloaders
 
 
 RUN R -e "blogdown::install_hugo()"
