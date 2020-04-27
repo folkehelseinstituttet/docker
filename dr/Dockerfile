@@ -45,6 +45,9 @@ RUN . /etc/environment \
   smhb \
   flumomo
 
+# https://stackoverflow.com/questions/57265913/error-tcp-provider-error-code-0x2746-during-the-sql-setup-in-linux-through-te
+RUN  sed -i 's/CipherString = DEFAULT@SECLEVEL=2/CipherString = DEFAULTS@SECLEVEL=1/g'  /etc/ssl/openssl.cnf
+
 RUN touch /etc/xxx
 
 # RUN R -e 'install.packages("data.table", type = "source", repos = "https://Rdatatable.gitlab.io/data.table")'
