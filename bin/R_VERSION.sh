@@ -1,3 +1,3 @@
 #!/bin/bash
 
-export RVERSION=3.6.0
+export RVERSION=3.6.3
