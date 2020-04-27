@@ -119,23 +119,7 @@ RUN . /etc/environment \
   && install2.r --error --repos $MRAN \
     data.table \
     influenceR \
-    gower
-
-# Install clang to use as compiler
-# clang seems to be more memory efficient with the templates than g++
-# with g++ rstan cannot compile on docker hub due to memory issues
-RUN apt-get update \ 
-	&& apt-get install -y --no-install-recommends \
-                   clang
-
-# Global site-wide config
-RUN mkdir -p $HOME/.R/ \
-    && echo "\nCXX=clang++ -ftemplate-depth-256\n" >> $HOME/.R/Makevars \
-    && echo "CC=clang\n" >> $HOME/.R/Makevars \
-    && echo "CXXFLAGS += -Os\n" >> $HOME/.R/Makevars
-
-RUN . /etc/environment \ 
-  && install2.r --error --repos $MRAN --deps TRUE \
+    gower \
     ggrepel \
     lme4 \
     arm \
@@ -267,13 +251,6 @@ RUN . /etc/environment \
 
 
 RUN R -e "blogdown::install_hugo()"
-
-## NEWER STUFF THAT NEEDS TO BE INSTALLED FROM GITHUB
-#RUN R -e "devtools::install_github('Appsilon/shiny.router',ref='7d9bc757ea31a1fe8faea6a5817c8adda97a0be0')"
-#RUN R -e "devtools::install_github('stan-dev/projpred', ref='d9a59c432899d2c3086623302188eb140bee2e21')"
-#RUN R -e "devtools::install_github('r-lib/testthat')"
-#RUN R -e "devtools::install_github('hadley/haven', force=TRUE)"
-#RUN R -e "devtools::install_github('cran/optimParallel', force=TRUE)"
 
 env LANG=C.UTF-8 DEBIAN_FRONTEND=noninteractive
 
