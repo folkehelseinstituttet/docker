@@ -234,7 +234,6 @@ RUN . /etc/environment \
     odbc \
     mem \
     pbapply \
-    SDMTools \
     ncdf4 \
     huxtable \
     svglite \
