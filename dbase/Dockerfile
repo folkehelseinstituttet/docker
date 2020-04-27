@@ -53,7 +53,7 @@ RUN tlmgr option repository http://ctan.uib.no/systems/texlive/tlnet
 
 RUN apt-get install -y xzdec
 RUN tlmgr init-usertree
-RUN tlmgr update --self
+#RUN tlmgr update --self
 RUN tlmgr install \
   svg \
   koma-script \
