@@ -46,15 +46,13 @@ COPY fonts-ubuntu_0.83-4_all.deb /tmp/fonts-ubuntu_0.83-4_all.deb
 RUN dpkg -i /tmp/fonts-ubuntu_0.83-4_all.deb
 
 # tinytex needed packages
-RUN apt-get purge tlmgr
-RUN apt-get install -y tlmgr
-RUN tlmgr option repository http://ctan.uib.no/systems/texlive/tlnet
+#RUN tlmgr option repository http://ctan.uib.no/systems/texlive/tlnet
 #COPY update-tlmgr-latest.sh /tmp/update-tlmgr-latest.sh
 #RUN chmod 777 /tmp/update-tlmgr-latest.sh
 #RUN sudo /tmp/update-tlmgr-latest.sh -- --upgrade
 
 RUN apt-get install -y xzdec
-RUN tlmgr init-usertree
+#RUN tlmgr init-usertree
 RUN tlmgr update --self
 RUN tlmgr install \
   svg \
