@@ -310,3 +310,5 @@ RUN echo "LANG=en_US.UTF-8" >> /home/shiny/.Renviron
 # https://stackoverflow.com/questions/57265913/error-tcp-provider-error-code-0x2746-during-the-sql-setup-in-linux-through-te
 RUN  sed -i 's/CipherString = DEFAULT@SECLEVEL=2/CipherString = DEFAULTS@SECLEVEL=1/g'  /etc/ssl/openssl.cnf
 
+RUN echo "rstudio ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
