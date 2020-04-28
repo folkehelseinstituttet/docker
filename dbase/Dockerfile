@@ -265,7 +265,12 @@ RUN . /etc/environment \
     egg \
     EpiEstim \
     epitrix \
-    shinycssloaders
+    shinycssloaders \
+    globals \
+    listenv \
+    foreach \
+    learnr \
+    FluMoDL 
 
 RUN R -e "blogdown::install_hugo()"
 
