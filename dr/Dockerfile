@@ -37,6 +37,7 @@ RUN . /etc/environment \
   flumomo
 
 # minuconda
+RUN echo "RETICULATE_MINICONDA_PATH='/miniconda'" >> /usr/local/lib/R/etc/Renviron
 RUN Rscript -e 'reticulate::install_miniconda()'
 RUN chmod -R 0777 /miniconda
 RUN Rscript -e 'reticulate::py_install("marrow.mailer",pip=T)'
