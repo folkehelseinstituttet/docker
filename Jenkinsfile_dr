@@ -34,7 +34,7 @@ pipeline {
         sh 'pwd'
 	sh '$WORKSPACE/bin/dr_build.sh'
 	// sh 'export PATH=$PATH:/home/jenkins/bin && echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io && $WORKSPACE/bin/dr_push.sh'
-        sh 'sudo $WORKSPACE/bin/dr_push.sh'
+        sh 'sudo -E $WORKSPACE/bin/dr_push.sh'
       }
     }
   }

@@ -2,6 +2,6 @@
 source $WORKSPACE/bin/R_VERSION.sh
 source /etc/environment
 
-sudo podman login docker.io -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+podman login docker.io -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
-sudo podman push fhix/dbase:$RVERSION
+podman push fhix/dbase:$RVERSION
