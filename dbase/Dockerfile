@@ -9,6 +9,7 @@ RUN ln -s /usr/local/lib/R/site-library/ /r
 # RUN sed -i '/exit 1/d' /etc/cont-init.d/userconf
 
 # update
+RUN apt-get clean
 RUN apt-get update -y
 
 ## Kerberos for SQL server auth
@@ -297,6 +298,16 @@ RUN chmod 777 /analyses /dropbox
 
 # preferences to stop timing out
 COPY rsession.conf /etc/rstudio/rsession.conf
+
+# miniconda
+RUN echo "RETICULATE_MINICONDA_PATH='/miniconda'" >> /usr/local/lib/R/etc/Renviron
+RUN Rscript -e 'reticulate::install_miniconda()'
+RUN chmod -R 0777 /miniconda
+RUN Rscript -e 'reticulate::py_install("marrow.mailer",pip=T)'
+
+# ssh
+RUN mkdir ~/.ssh/
+RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 ## ADD IN SHINY
 ENV ADD=shiny
