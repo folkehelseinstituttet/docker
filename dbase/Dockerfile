@@ -271,7 +271,8 @@ RUN . /etc/environment \
     listenv \
     foreach \
     learnr \
-    FluMoDL 
+    FluMoDL \
+    RODBC
 
 RUN R -e "blogdown::install_hugo()"
 
