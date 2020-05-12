@@ -329,7 +329,17 @@ RUN echo "LANG=en_US.UTF-8" >> /home/shiny/.Renviron
 
 
 # https://stackoverflow.com/questions/57265913/error-tcp-provider-error-code-0x2746-during-the-sql-setup-in-linux-through-te
-RUN  sed -i 's/CipherString = DEFAULT@SECLEVEL=2/CipherString = DEFAULTS@SECLEVEL=1/g'  /etc/ssl/openssl.cnf
+# https://askubuntu.com/questions/1233186/ubuntu-20-04-how-to-set-lower-ssl-security-level
+RUN sed -i '1 i\openssl_conf = default_conf' /etc/ssl/openssl.cnf
+RUN echo "[ default_conf ]" >> /etc/ssl/openssl.cnf
+RUN echo "ssl_conf = ssl_sect" >> /etc/ssl/openssl.cnf
+RUN echo "[ssl_sect]" >> /etc/ssl/openssl.cnf
+RUN echo "system_default = ssl_default_sect" >> /etc/ssl/openssl.cnf
+RUN echo "[ssl_default_sect]" >> /etc/ssl/openssl.cnf
+RUN echo "MinProtocol = TLSv1.2" >> /etc/ssl/openssl.cnf
+RUN echo "CipherString = DEFAULT:@SECLEVEL=1" >> /etc/ssl/openssl.cnf
+
 
 RUN echo "rstudio ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
+RUN rm -rf /tmp/downloaded_packages
