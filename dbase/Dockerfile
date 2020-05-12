@@ -21,7 +21,7 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && DEBIAN_FRONTEND=noninteractive apt-get -yqq install krb5-user libpam-krb5
 
 # mysql
-RUN apt-get install -y unixodbc unixodbc-dev libmyodbc
+#RUN apt-get install -y unixodbc unixodbc-dev libmyodbc
 #RUN mkdir -p /usr/lib/x86_64-linux-gnu/odbc/
 #COPY mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64.deb /tmp/
 #RUN dpkg -i /tmp/mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64.deb sudo apt-get install -f.
