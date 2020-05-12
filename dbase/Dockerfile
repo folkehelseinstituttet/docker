@@ -41,9 +41,11 @@ RUN echo "TZ='Europe/Oslo'" >> /usr/local/lib/R/etc/Renviron
 # tinytex  and bcp
 RUN Rscript -e "tinytex::install_tinytex()"
 RUN chmod -R 777 /root/.TinyTeX
-RUN echo PATH="/root/.TinyTeX/bin:$PATH" >> /etc/environment
-RUN echo PATH="$PATH:/opt/mssql-tools/bin" >> /etc/environment
-#RUN echo export PATH >> /etc/profile
+RUN ln -s /root/.TinyTeX/bin/x86_64-linux/* /usr/local/bin && ls -l /usr/local/bin
+
+RUN echo PATH="/root/.TinyTeX/bin:$PATH" >> /etc/profile
+RUN echo PATH="$PATH:/opt/mssql-tools/bin" >> /etc/profile
+RUN echo export PATH >> /etc/profile
 RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> /usr/local/lib/R/etc/Rprofile.site
 
 # FONTS
