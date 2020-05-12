@@ -40,7 +40,8 @@ RUN echo "TZ='Europe/Oslo'" >> /usr/local/lib/R/etc/Renviron
 
 # tinytex  and bcp
 RUN Rscript -e "tinytex::install_tinytex()"
-RUN echo PATH="/usr/local/texlive/2020/bin/x86_64-linux:$PATH" >> /etc/profile
+RUN chmod -R 777 /root/.TinyTeX
+RUN echo PATH="/root/.TinyTeX/bin:$PATH" >> /etc/profile
 RUN echo PATH="$PATH:/opt/mssql-tools/bin" >> /etc/profile
 RUN echo export PATH >> /etc/profile
 RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> /usr/local/lib/R/etc/Rprofile.site
