@@ -318,11 +318,7 @@ RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 ## ADD IN SHINY
 ENV ADD=shiny
-RUN wget --no-verbose https://raw.githubusercontent.com/rocker-org/rocker-versioned/master/rstudio/add_shiny.sh -O "add_shiny.sh" 
-RUN sed -i -e "1d" add_shiny.sh
-RUN sed -i '1s/^/#!\/bin\/bash /' add_shiny.sh
-RUN chmod 777 add_shiny.sh
-RUN /add_shiny.sh
+RUN /rocker_scripts/install_shiny_server.sh
 RUN rm /etc/cont-init.d/add
 COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 
