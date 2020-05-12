@@ -12,7 +12,7 @@ RUN ln -s /usr/local/lib/R/site-library/ /r
 RUN apt-get clean
 RUN apt-get update -y
 
-## Kerberos for SQL server auth
+## Kerberos for SQL server auth and mssql drivers
 RUN apt-get install --yes apt-transport-https curl gnupg
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && curl https://packages.microsoft.com/config/ubuntu/19.10/prod.list > /etc/apt/sources.list.d/mssql-release.list \
@@ -20,13 +20,14 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && ACCEPT_EULA=Y apt-get install --yes --no-install-recommends msodbcsql17 \
   && DEBIAN_FRONTEND=noninteractive apt-get -yqq install krb5-user libpam-krb5
 
-# other database stuff
-RUN apt-get install -y unixodbc unixodbc-dev
-RUN mkdir -p /usr/lib/x86_64-linux-gnu/odbc/
-COPY mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64.tar.gz /tmp/mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64.tar.gz
-RUN cd /tmp; tar -xvf /tmp/mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64.tar.gz
-RUN cd /tmp; sudo cp mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64/lib/libmyodbc8* /usr/lib/x86_64-linux-gnu/odbc/
-RUN sudo /tmp/mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64/bin/myodbc-installer -d -a -n "MySQL" -t "DRIVER=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8w.so;Setup=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8S.so;"
+# mysql
+RUN apt-get install -y unixodbc unixodbc-dev libmyodbc
+#RUN mkdir -p /usr/lib/x86_64-linux-gnu/odbc/
+#COPY mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64.deb /tmp/
+#RUN dpkg -i /tmp/mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64.deb sudo apt-get install -f.
+#RUN cd /tmp; tar -xvf /tmp/mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64.tar.gz
+#RUN cd /tmp; sudo cp mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64/lib/libmyodbc8* /usr/lib/x86_64-linux-gnu/odbc/
+#RUN sudo /tmp/mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64/bin/myodbc-installer -d -a -n "MySQL" -t "DRIVER=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8w.so;Setup=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8S.so;"
 
 # bcp for copying data directly to MSSQL
 RUN ACCEPT_EULA=Y DEBIAN_FRONTEND=noninteractive apt-get install --yes mssql-tools
