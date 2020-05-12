@@ -141,7 +141,7 @@ RUN /sbin/ldconfig
 
 # data.table doesn't like clang
 RUN . /etc/environment \ 
-  && install2.r --error --repos $MRAN \
+  && install2.r --error --skipinstalled -d TRUE -r $CRAN -n 6 \
     data.table \
     influenceR \
     gower \
@@ -160,7 +160,7 @@ RUN R -e "install.packages('INLA', repos=c(getOption('repos'), INLA='https://inl
 RUN apt-get install -y jags
 
 RUN . /etc/environment \ 
-  && install2.r --error --repos $MRAN --deps TRUE \
+  && install2.r --error --skipinstalled -d TRUE -r $CRAN -n 6 \
     surveillance \
     munsell \
     RColorBrewer \
@@ -213,7 +213,7 @@ RUN . /etc/environment \
     processx
 
 RUN . /etc/environment \ 
-  && install2.r --error --repos $MRAN --deps TRUE \
+  && install2.r --error --skipinstalled -d TRUE -r $CRAN -n 6 \
     survminer \
     units \
     rgdal \
@@ -256,7 +256,7 @@ RUN . /etc/environment \
     ggpubr
 
 RUN . /etc/environment \ 
-  && install2.r --error --repos $MRAN --deps TRUE \
+  && install2.r --error --skipinstalled -d TRUE -r $CRAN -n 6 \
     samplingbook \
     writexl \
     dlnm \
