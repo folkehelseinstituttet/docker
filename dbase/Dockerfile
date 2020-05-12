@@ -39,6 +39,7 @@ RUN echo "TZ='Europe/Oslo'" >> /etc/profile
 RUN echo "TZ='Europe/Oslo'" >> /usr/local/lib/R/etc/Renviron
 
 # tinytex  and bcp
+RUN echo PATH="/usr/local/texlive/2020/bin/x86_64-linux:$PATH" >> /etc/profile
 RUN echo PATH="$PATH:/opt/mssql-tools/bin" >> /etc/profile
 RUN echo export PATH >> /etc/profile
 RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> /usr/local/lib/R/etc/Rprofile.site
