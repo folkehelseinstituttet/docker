@@ -104,6 +104,7 @@ RUN tlmgr update --all
 RUN texhash
 
 # include new repo
+RUN sed -i "s/mran.microsoft.com/cran.microsoft.com/g" /usr/local/lib/R/etc/Rprofile.site
 RUN sed -i "s/CRAN/folkehelseinstituttet=\'https:\\/\\/folkehelseinstituttet.github.io\\/drat\\/\',euromomo=\'https:\\/\\/euromomonetwork.github.io\\/drat\\/\',raubreywhite=\'https:\\/\\/raubreywhite.github.io\\/drat\\/\',CRAN/" /usr/local/lib/R/etc/Rprofile.site
 RUN sed -i "1s/^/dratRepo=\'\\/git\\/drat\\/\'\n/" /usr/local/lib/R/etc/Rprofile.site
 
@@ -140,7 +141,7 @@ RUN /sbin/ldconfig
 
 # data.table doesn't like clang
 RUN . /etc/environment \ 
-  && install2.r --error --repos $CRAN \
+  && install2.r --error --repos $MRAN \
     data.table \
     influenceR \
     gower \
@@ -159,7 +160,7 @@ RUN R -e "install.packages('INLA', repos=c(getOption('repos'), INLA='https://inl
 RUN apt-get install -y jags
 
 RUN . /etc/environment \ 
-  && install2.r --error --repos $CRAN --deps TRUE \
+  && install2.r --error --repos $MRAN --deps TRUE \
     surveillance \
     munsell \
     RColorBrewer \
@@ -212,7 +213,7 @@ RUN . /etc/environment \
     processx
 
 RUN . /etc/environment \ 
-  && install2.r --error --repos $CRAN --deps TRUE \
+  && install2.r --error --repos $MRAN --deps TRUE \
     survminer \
     units \
     rgdal \
@@ -255,7 +256,7 @@ RUN . /etc/environment \
     ggpubr
 
 RUN . /etc/environment \ 
-  && install2.r --error --repos $CRAN --deps TRUE \
+  && install2.r --error --repos $MRAN --deps TRUE \
     samplingbook \
     writexl \
     dlnm \
@@ -317,9 +318,10 @@ RUN mkdir ~/.ssh/
 RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 ## ADD IN SHINY
-ENV ADD=shiny
+RUN sed -i '/^\./d' /rocker_scripts/install_shiny_server.sh
+RUN sed -i 's/rstudio}}/rstudio}/g' /rocker_scripts/install_shiny_server.sh
+# RUN cat /rocker_scripts/install_shiny_server.sh
 RUN /rocker_scripts/install_shiny_server.sh
-RUN rm /etc/cont-init.d/add
 COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 
 # shiny for norwegian characters
