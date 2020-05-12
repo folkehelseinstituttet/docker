@@ -104,7 +104,6 @@ RUN tlmgr update --all
 RUN texhash
 
 # include new repo
-RUN sed -i "s/mran.microsoft.com/cran.microsoft.com/g" /usr/local/lib/R/etc/Rprofile.site
 RUN sed -i "s/CRAN/folkehelseinstituttet=\'https:\\/\\/folkehelseinstituttet.github.io\\/drat\\/\',euromomo=\'https:\\/\\/euromomonetwork.github.io\\/drat\\/\',raubreywhite=\'https:\\/\\/raubreywhite.github.io\\/drat\\/\',CRAN/" /usr/local/lib/R/etc/Rprofile.site
 RUN sed -i "1s/^/dratRepo=\'\\/git\\/drat\\/\'\n/" /usr/local/lib/R/etc/Rprofile.site
 
@@ -141,7 +140,7 @@ RUN /sbin/ldconfig
 
 # data.table doesn't like clang
 RUN . /etc/environment \ 
-  && install2.r --error --repos $MRAN \
+  && install2.r --error --repos $CRAN \
     data.table \
     influenceR \
     gower \
@@ -160,7 +159,7 @@ RUN R -e "install.packages('INLA', repos=c(getOption('repos'), INLA='https://inl
 RUN apt-get install -y jags
 
 RUN . /etc/environment \ 
-  && install2.r --error --repos $MRAN --deps TRUE \
+  && install2.r --error --repos $CRAN --deps TRUE \
     surveillance \
     munsell \
     RColorBrewer \
@@ -213,7 +212,7 @@ RUN . /etc/environment \
     processx
 
 RUN . /etc/environment \ 
-  && install2.r --error --repos $MRAN --deps TRUE \
+  && install2.r --error --repos $CRAN --deps TRUE \
     survminer \
     units \
     rgdal \
@@ -256,7 +255,7 @@ RUN . /etc/environment \
     ggpubr
 
 RUN . /etc/environment \ 
-  && install2.r --error --repos $MRAN --deps TRUE \
+  && install2.r --error --repos $CRAN --deps TRUE \
     samplingbook \
     writexl \
     dlnm \
