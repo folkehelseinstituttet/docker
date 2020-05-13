@@ -342,4 +342,7 @@ RUN echo "CipherString = DEFAULT:@SECLEVEL=1" >> /etc/ssl/openssl.cnf
 
 RUN echo "rstudio ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
+# need this for tinytex
+RUN chmod -R 777 /root
+
 RUN rm -rf /tmp/downloaded_packages
