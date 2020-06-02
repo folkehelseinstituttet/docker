@@ -1,5 +1,5 @@
 ARG RVERSION=RVERSION
-FROM rockerdev/verse:${RVERSION}
+FROM rocker/verse:${RVERSION}-ubuntu18.04
 MAINTAINER "Carl Boettiger and Dirk Eddelbuettel" rocker-maintainers@eddelbuettel.com
 
 # soft link to site library
