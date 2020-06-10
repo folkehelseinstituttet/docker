@@ -140,7 +140,7 @@ RUN sudo echo /usr/lib/libreoffice/program/ >> /etc/ld.so.conf.d/local.conf
 RUN /sbin/ldconfig
 
 # data.table doesn't like clang
-RUN . /etc/environment \ 
+RUN . /etc/environment \
   && install2.r --error --skipinstalled -d TRUE -r $CRAN -n 6 \
     data.table \
     influenceR \
@@ -159,7 +159,7 @@ RUN R -e "install.packages('INLA', repos=c(getOption('repos'), INLA='https://inl
 
 RUN apt-get install -y jags
 
-RUN . /etc/environment \ 
+RUN . /etc/environment \
   && install2.r --error --skipinstalled -d TRUE -r $CRAN -n 6 \
     surveillance \
     munsell \
@@ -212,7 +212,7 @@ RUN . /etc/environment \
     reticulate \
     processx
 
-RUN . /etc/environment \ 
+RUN . /etc/environment \
   && install2.r --error --skipinstalled -d TRUE -r $CRAN -n 6 \
     survminer \
     units \
@@ -255,7 +255,7 @@ RUN . /etc/environment \
     GeneNet \
     ggpubr
 
-RUN . /etc/environment \ 
+RUN . /etc/environment \
   && install2.r --error --skipinstalled -d TRUE -r $CRAN -n 6 \
     samplingbook \
     writexl \
@@ -346,3 +346,9 @@ RUN echo "rstudio ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 RUN chmod -R 777 /root
 
 RUN rm -rf /tmp/downloaded_packages
+
+# node & mapshaper
+RUN curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+RUN sudo apt-get install -y nodejs
+RUN npm update -g mapshaper
+
