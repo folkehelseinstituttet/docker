@@ -132,7 +132,8 @@ RUN apt-get update && apt-get install -y \
   cargo \
   libnetcdf-dev \
   netcdf-bin \
-  libsodium-dev
+  libsodium-dev \
+  libglpk-dev
 
 # libreoffice
 RUN apt-get update && apt-get install -y libreoffice
