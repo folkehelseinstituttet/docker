@@ -1,3 +1,3 @@
 #!/bin/bash
 
-export RVERSION=4.0.0
+export RVERSION=4.0.2
