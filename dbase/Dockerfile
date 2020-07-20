@@ -154,7 +154,8 @@ RUN . /etc/environment \
     pander \
     httpuv \
     ggpubr \
-    rio
+    rio \
+    foreach
 
 #  INLA
 RUN R -e "install.packages('INLA', repos=c(getOption('repos'), INLA='https://inla.r-inla-download.org/R/stable'), dep=FALSE)"
@@ -278,7 +279,6 @@ RUN . /etc/environment \
     shinycssloaders \
     globals \
     listenv \
-    foreach \
     learnr \
     FluMoDL \
     RODBC
