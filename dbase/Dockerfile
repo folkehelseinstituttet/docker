@@ -176,7 +176,6 @@ RUN . /etc/environment \
     corrr \
     ggdendro \
     ClustOfVar \
-    dendextend \
     plumber \
     knitcitations \
     bibtex \
