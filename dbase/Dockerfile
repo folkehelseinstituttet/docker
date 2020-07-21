@@ -215,7 +215,7 @@ RUN . /etc/environment \
     processx
 
 RUN . /etc/environment \
-  && install2.r --error --skipinstalled -d TRUE -r $CRAN -n 6 \
+  && install2.r --error --skipinstalled -d FALSE -r $CRAN -n 6 \
     survminer \
     units \
     rgdal \
