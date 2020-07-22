@@ -215,7 +215,7 @@ RUN . /etc/environment \
     processx
 
 RUN . /etc/environment \
-  && install2.r --error --skipinstalled -d FALSE -r $CRAN -n 6 \
+  && install2.r --error --skipinstalled -d TRUE -r $CRAN -n 6 \
     survminer \
     units \
     rgdal \
@@ -242,7 +242,6 @@ RUN . /etc/environment \
     RcppProgress \
     fancycut \
     odbc \
-    mem \
     pbapply \
     ncdf4 \
     huxtable \
@@ -251,6 +250,13 @@ RUN . /etc/environment \
     rsvg \
     missRanger \
     drc \
+    EnvStats \
+    RcppRoll \
+    mclust \
+    mem
+
+RUN . /etc/environment \
+  && install2.r --error --skipinstalled -d FALSE -r $CRAN -n 6 \
     DescTools \
     ppcor \
     corpcor \
