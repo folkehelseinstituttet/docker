@@ -316,9 +316,14 @@ COPY rsession.conf /etc/rstudio/rsession.conf
 
 # miniconda
 RUN echo "RETICULATE_MINICONDA_PATH='/miniconda'" >> /usr/local/lib/R/etc/Renviron
+#RUN echo "RETICULATE_PYTHON = '/miniconda/bin/python3'" >> /usr/local/lib/R/etc/Renviron
 RUN Rscript -e 'reticulate::install_miniconda()'
-RUN chmod -R 0777 /miniconda
+RUN Rscript -e 'reticulate::conda_remove("r-reticulate")'
+RUN Rscript -e 'reticulate::conda_create("r-reticulate",packages=c("python=3.8","numpy"))'
 RUN Rscript -e 'reticulate::py_install("marrow.mailer",pip=T)'
+# https://github.com/marrow/mailer/issues/87
+RUN source /miniconda/etc/profile.d/conda.sh && conda activate r-reticulate && python -m pip install git+https://github.com/LexMachinaInc/mailer.git && python -m pip install git+https://github.com/LexMachinaInc/util.git && conda deactivate
+RUN chmod -R 0777 /miniconda
 
 # ssh
 RUN mkdir ~/.ssh/
@@ -358,4 +363,3 @@ RUN rm -rf /tmp/downloaded_packages
 RUN curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 RUN sudo apt-get install -y nodejs
 RUN npm update -g mapshaper
-
