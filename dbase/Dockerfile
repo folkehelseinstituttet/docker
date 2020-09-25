@@ -292,16 +292,6 @@ RUN R -e "blogdown::install_hugo()"
 
 env LANG=C.UTF-8 DEBIAN_FRONTEND=noninteractive
 
-## TENSORFLOW
-
-RUN apt-get install -y python3-pip python3-dev
-RUN pip3 install --upgrade pip
-RUN pip3 install tensorflow
-RUN pip3 install junit-xml
-RUN pip3 install virtualenv
-
-RUN R -e "Sys.setenv(TENSORFLOW_PYTHON_VERSION=3);install.packages('tensorflow')"
-
 # rclone
 RUN apt-get update && apt-get install -y \
         curl man-db
@@ -320,9 +310,11 @@ RUN echo "RETICULATE_MINICONDA_PATH='/miniconda'" >> /usr/local/lib/R/etc/Renvir
 RUN Rscript -e 'reticulate::install_miniconda()'
 RUN Rscript -e 'reticulate::conda_remove("r-reticulate")'
 RUN Rscript -e 'reticulate::conda_create("r-reticulate",packages=c("python=3.8","numpy"))'
+RUN chmod -R 0777 /miniconda
 RUN Rscript -e 'reticulate::py_install("marrow.mailer",pip=T)'
 # https://github.com/marrow/mailer/issues/87
-RUN source /miniconda/etc/profile.d/conda.sh && conda activate r-reticulate && python -m pip install git+https://github.com/LexMachinaInc/mailer.git && python -m pip install git+https://github.com/LexMachinaInc/util.git && conda deactivate
+RUN source /miniconda/etc/profile.d/conda.sh && conda activate r-reticulate && python -m pip install --upgrade git+https://github.com/LexMachinaInc/mailer.git && python -m pip install --upgrade git+https://github.com/LexMachinaInc/util.git && conda deactivate
+# RUN source /miniconda/etc/profile.d/conda.sh && conda activate r-reticulate && conda remove email && conda deactivate
 RUN chmod -R 0777 /miniconda
 
 # ssh
