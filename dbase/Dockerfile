@@ -89,7 +89,7 @@ RUN tlmgr install \
   xifthen \
   ec \
   multirow \
-  collection-latexextra \
+  hyphen-norwegian \
   palatino \
   mathpazo \
   fpl \
@@ -101,7 +101,7 @@ RUN tlmgr install \
   mathdesign \
   ly1 \
   charter
-  #hyphen-norwegian
+  #collection-latexextra
 RUN tlmgr update --all
 
 RUN texhash
