@@ -39,12 +39,14 @@ RUN apt-get install -y tzdata
 RUN echo "TZ='Europe/Oslo'" >> /etc/environment
 RUN echo "TZ='Europe/Oslo'" >> /usr/local/lib/R/etc/Renviron
 
-# tinytex  and bcp
-RUN Rscript -e "tinytex::install_tinytex()"
-RUN chmod -R 777 /root/.TinyTeX
-RUN ln -s /root/.TinyTeX/bin/x86_64-linux/* /usr/local/bin && ls -l /usr/local/bin
+# tinytex
+#RUN Rscript -e "tinytex::install_tinytex()"
+#RUN chmod -R 777 /root/.TinyTeX
+#RUN ln -s /root/.TinyTeX/bin/x86_64-linux/* /usr/local/bin && ls -l /usr/local/bin
 
-RUN echo PATH="/root/.TinyTeX/bin:$PATH" >> /etc/profile
+#RUN echo PATH="/root/.TinyTeX/bin:$PATH" >> /etc/profile
+
+# bcp
 RUN echo PATH="$PATH:/opt/mssql-tools/bin" >> /etc/profile
 RUN echo export PATH >> /etc/profile
 RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> /usr/local/lib/R/etc/Rprofile.site
@@ -59,7 +61,7 @@ RUN dpkg -i /tmp/fonts-ubuntu_0.83-4_all.deb
 #RUN chmod 777 /tmp/update-tlmgr-latest.sh
 #RUN sudo /tmp/update-tlmgr-latest.sh -- --upgrade
 
-RUN apt-get install -y xzdec
+#RUN apt-get install -y xzdec
 #RUN tlmgr init-usertree
 
 RUN tlmgr update --self
@@ -92,7 +94,6 @@ RUN tlmgr install \
   mathpazo \
   fpl \
   babel-norsk \
-  hyphen-norwegian \
   siunitx \
   pgf \
   algorithms \
@@ -100,6 +101,7 @@ RUN tlmgr install \
   mathdesign \
   ly1 \
   charter
+  #hyphen-norwegian
 RUN tlmgr update --all
 
 RUN texhash
