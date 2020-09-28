@@ -1,6 +1,6 @@
 ARG RVERSION=RVERSION
-FROM rocker/verse:${RVERSION}
-#FROM rocker/verse:${RVERSION}-ubuntu18.04
+FROM rocker/geospatial:${RVERSION}
+#FROM rocker/verse:${RVERSION}
 MAINTAINER "Carl Boettiger and Dirk Eddelbuettel" rocker-maintainers@eddelbuettel.com
 
 # soft link to site library
@@ -315,7 +315,7 @@ RUN Rscript -e 'reticulate::conda_create("r-reticulate",packages=c("python=3.8",
 RUN chmod -R 0777 /miniconda
 RUN Rscript -e 'reticulate::py_install("marrow.mailer",pip=T)'
 # https://github.com/marrow/mailer/issues/87
-RUN source /miniconda/etc/profile.d/conda.sh && conda activate r-reticulate && python -m pip install --upgrade git+https://github.com/LexMachinaInc/mailer.git && python -m pip install --upgrade git+https://github.com/LexMachinaInc/util.git && conda deactivate
+# RUN source /miniconda/etc/profile.d/conda.sh && conda activate r-reticulate && python -m pip install --upgrade git+https://github.com/LexMachinaInc/mailer.git && python -m pip install --upgrade git+https://github.com/LexMachinaInc/util.git && conda deactivate
 # RUN source /miniconda/etc/profile.d/conda.sh && conda activate r-reticulate && conda remove email && conda deactivate
 RUN chmod -R 0777 /miniconda
 
@@ -354,6 +354,6 @@ RUN chmod -R 777 /root
 RUN rm -rf /tmp/downloaded_packages
 
 # node & mapshaper
-RUN curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
-RUN sudo apt-get install -y nodejs
-RUN npm update -g mapshaper
+# RUN curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+# RUN sudo apt-get install -y nodejs
+# RUN npm update -g mapshaper
