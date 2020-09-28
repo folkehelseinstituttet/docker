@@ -306,18 +306,24 @@ RUN chmod 777 /analyses /dropbox
 # preferences to stop timing out
 COPY rsession.conf /etc/rstudio/rsession.conf
 
-# miniconda
-RUN echo "RETICULATE_MINICONDA_PATH='/miniconda'" >> /usr/local/lib/R/etc/Renviron
-#RUN echo "RETICULATE_PYTHON = '/miniconda/bin/python3'" >> /usr/local/lib/R/etc/Renviron
-RUN Rscript -e 'reticulate::install_miniconda()'
-RUN Rscript -e 'reticulate::conda_remove("r-reticulate")'
-RUN Rscript -e 'reticulate::conda_create("r-reticulate",packages=c("python=3.8","numpy"))'
-RUN chmod -R 0777 /miniconda
-RUN Rscript -e 'reticulate::py_install("marrow.mailer",pip=T)'
+# reticulate, python, and marrow mailer
+RUN echo "RETICULATE_MINICONDA_ENABLED=FALSE" >> /usr/local/lib/R/etc/Renviron
+RUN apt-get install -y python3 python3-pip
 # https://github.com/marrow/mailer/issues/87
-# RUN source /miniconda/etc/profile.d/conda.sh && conda activate r-reticulate && python -m pip install --upgrade git+https://github.com/LexMachinaInc/mailer.git && python -m pip install --upgrade git+https://github.com/LexMachinaInc/util.git && conda deactivate
+RUN python3 -m pip install --upgrade git+https://github.com/LexMachinaInc/mailer.git
+RUN python3 -m pip install --upgrade git+https://github.com/LexMachinaInc/util.git
+
+#RUN echo "RETICULATE_MINICONDA_PATH='/miniconda'" >> /usr/local/lib/R/etc/Renviron
+#RUN echo "RETICULATE_PYTHON = '/miniconda/bin/python3'" >> /usr/local/lib/R/etc/Renviron
+#RUN Rscript -e 'reticulate::install_miniconda()'
+#RUN Rscript -e 'reticulate::conda_remove("r-reticulate")'
+#RUN Rscript -e 'reticulate::conda_create("r-reticulate",packages=c("python=3.8","numpy"))'
+#RUN chmod -R 0777 /miniconda
+#RUN Rscript -e 'reticulate::py_install("marrow.mailer",pip=T)'
+# https://github.com/marrow/mailer/issues/87
+# RUN source /miniconda/etc/profile.d/conda.sh && conda activate r-reticulate && python3 -m pip install --upgrade git+https://github.com/LexMachinaInc/mailer.git && python3 -m pip install --upgrade git+https://github.com/LexMachinaInc/util.git && conda deactivate
 # RUN source /miniconda/etc/profile.d/conda.sh && conda activate r-reticulate && conda remove email && conda deactivate
-RUN chmod -R 0777 /miniconda
+#RUN chmod -R 0777 /miniconda
 
 # ssh
 RUN mkdir ~/.ssh/
