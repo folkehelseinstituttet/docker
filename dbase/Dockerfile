@@ -1,6 +1,6 @@
 ARG RVERSION=RVERSION
-FROM rocker/geospatial:${RVERSION}
 #FROM rocker/verse:${RVERSION}
+#FROM rocker/geospatial:${RVERSION}
 MAINTAINER "Carl Boettiger and Dirk Eddelbuettel" rocker-maintainers@eddelbuettel.com
 
 # soft link to site library
