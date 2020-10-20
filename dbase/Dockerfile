@@ -292,7 +292,8 @@ RUN . /etc/environment \
     learnr \
     FluMoDL \
     RODBC \
-    tableHTML
+    tableHTML \
+    htmlTable
 
 RUN R -e "blogdown::install_hugo()"
 
