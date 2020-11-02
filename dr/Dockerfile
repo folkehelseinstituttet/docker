@@ -11,30 +11,25 @@ RUN R -e 'devtools::install_github("HenrikBengtsson/progressr")'
 RUN R -e 'devtools::install_github("rstudio/plumber")'
 
 # DRAT PACKAGES FROM EUROMOMO
-RUN . /etc/environment \ 
+RUN . /etc/environment \
   && install2.r --error \
-  MOMO 
+  MOMO
 
 ## DRAT PACKAGES FROM RICHARD
-RUN . /etc/environment \ 
+RUN . /etc/environment \
   && install2.r --error \
-  RAWmisc \
-  org
+  RAWmisc
 
 ## DRAT PACKAGES FROM FHI
-RUN . /etc/environment \ 
+RUN . /etc/environment \
   && install2.r --error \
-  fhidata \
+  org \
   plnr \
+  fhidata \
+  fhimaps \
   fhiplot \
   fhi \
   spread \
   attrib \
-  fd \
   sykdomspuls \
-  noispiah \
-  ui \
-  smhb \
   flumomo
-
-
