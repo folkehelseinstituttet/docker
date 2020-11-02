@@ -33,37 +33,22 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
 # bcp for copying data directly to MSSQL
 RUN ACCEPT_EULA=Y DEBIAN_FRONTEND=noninteractive apt-get install --yes mssql-tools
 
+# bcp
+RUN echo PATH="$PATH:/opt/mssql-tools/bin" >> /etc/profile
+RUN echo export PATH >> /etc/profile
+RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> /usr/local/lib/R/etc/Rprofile.site
+
 # timezone
 # echo "TZ='Europe/Oslo'" >> /usr/local/lib/R/etc/Renviron
 RUN apt-get install -y tzdata
 RUN echo "TZ='Europe/Oslo'" >> /etc/environment
 RUN echo "TZ='Europe/Oslo'" >> /usr/local/lib/R/etc/Renviron
 
-# tinytex
-#RUN Rscript -e "tinytex::install_tinytex()"
-#RUN chmod -R 777 /root/.TinyTeX
-#RUN ln -s /root/.TinyTeX/bin/x86_64-linux/* /usr/local/bin && ls -l /usr/local/bin
-
-#RUN echo PATH="/root/.TinyTeX/bin:$PATH" >> /etc/profile
-
-# bcp
-RUN echo PATH="$PATH:/opt/mssql-tools/bin" >> /etc/profile
-RUN echo export PATH >> /etc/profile
-RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> /usr/local/lib/R/etc/Rprofile.site
-
 # FONTS
 COPY fonts-ubuntu_0.83-4_all.deb /tmp/fonts-ubuntu_0.83-4_all.deb
 RUN dpkg -i /tmp/fonts-ubuntu_0.83-4_all.deb
 
 # tinytex needed packages
-#RUN tlmgr option repository http://ctan.uib.no/systems/texlive/tlnet
-#COPY update-tlmgr-latest.sh /tmp/update-tlmgr-latest.sh
-#RUN chmod 777 /tmp/update-tlmgr-latest.sh
-#RUN sudo /tmp/update-tlmgr-latest.sh -- --upgrade
-
-#RUN apt-get install -y xzdec
-#RUN tlmgr init-usertree
-
 RUN tlmgr update --self
 RUN tlmgr install \
   svg \
@@ -101,7 +86,6 @@ RUN tlmgr install \
   mathdesign \
   ly1 \
   charter
-  #collection-latexextra
 RUN tlmgr update --all
 
 RUN texhash
@@ -110,8 +94,7 @@ RUN tlmgr install \
   collection-latexextra
 
 # include new repo
-RUN sed -i "s/mran.microsoft.com/cran.microsoft.com/g" /usr/local/lib/R/etc/Rprofile.site
-RUN sed -i "s/CRAN/folkehelseinstituttet=\'https:\\/\\/folkehelseinstituttet.github.io\\/drat\\/\',euromomo=\'https:\\/\\/euromomonetwork.github.io\\/drat\\/\',raubreywhite=\'https:\\/\\/raubreywhite.github.io\\/drat\\/\',CRAN/" /usr/local/lib/R/etc/Rprofile.site
+RUN sed -i "s/CRAN/folkehelseinstituttet=\'https:\\/\\/folkehelseinstituttet.github.io\\/drat\\/\',euromomo=\'https:\\/\\/euromomonetwork.github.io\\/drat\\/\',raubreywhite=\'https:\\/\\/raubreywhite.github.io\\/drat\\/\',CRANX=\'https:\\/\\/packagemanager.rstudio.com\\/all\\/__linux__\\/focal\\/344\',CRAN/" /usr/local/lib/R/etc/Rprofile.site
 RUN sed -i "1s/^/dratRepo=\'\\/git\\/drat\\/\'\n/" /usr/local/lib/R/etc/Rprofile.site
 
 RUN apt-get update && apt-get install -y \
