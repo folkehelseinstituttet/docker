@@ -276,7 +276,8 @@ RUN . /etc/environment \
     FluMoDL \
     RODBC \
     tableHTML \
-    htmlTable
+    htmlTable \
+    qs
 
 RUN R -e "blogdown::install_hugo()"
 
