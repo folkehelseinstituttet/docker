@@ -5,6 +5,7 @@ MAINTAINER "Carl Boettiger and Dirk Eddelbuettel" rocker-maintainers@eddelbuette
 # update
 RUN apt-get clean
 RUN apt-get update -y
+RUN apt-get install -y rsync
 
 # TEMPORARY SOLUTIONS UNTIL THE PACKAGE MAKES ITS WAY TO CRAN
 RUN R -e 'devtools::install_github("HenrikBengtsson/progressr")'
