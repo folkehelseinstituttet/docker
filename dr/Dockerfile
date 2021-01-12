@@ -14,7 +14,8 @@ RUN R -e 'devtools::install_github("rstudio/plumber")'
 ## THIS NEEDS TO BE MOVED INTO DBASE ONCE IT STARTS WORKING AGAIN
 RUN . /etc/environment \
   && install2.r --error \
-  distill
+  distill \
+  testthat
 
 # DRAT PACKAGES FROM EUROMOMO
 RUN . /etc/environment \
