@@ -277,7 +277,10 @@ RUN . /etc/environment \
     RODBC \
     tableHTML \
     htmlTable \
-    qs
+    qs \
+    distill \
+    testthat \
+    progressr
 
 RUN R -e "blogdown::install_hugo()"
 
