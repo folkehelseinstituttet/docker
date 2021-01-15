@@ -280,7 +280,8 @@ RUN . /etc/environment \
     qs \
     distill \
     testthat \
-    progressr
+    progressr \
+    XML
 
 RUN R -e "blogdown::install_hugo()"
 
