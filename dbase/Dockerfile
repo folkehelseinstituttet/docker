@@ -1,4 +1,5 @@
 ARG RVERSION=RVERSION
+ARG CRAN_CHECKPOINT=CRAN_CHECKPOINT
 FROM rocker/verse:${RVERSION}
 #FROM rocker/geospatial:${RVERSION}
 MAINTAINER "Carl Boettiger and Dirk Eddelbuettel" rocker-maintainers@eddelbuettel.com
@@ -93,9 +94,13 @@ RUN texhash
 RUN tlmgr install \
   collection-latexextra
 
-# include new repo
-RUN sed -i "s/CRAN/folkehelseinstituttet=\'https:\\/\\/folkehelseinstituttet.github.io\\/drat\\/\',euromomo=\'https:\\/\\/euromomonetwork.github.io\\/drat\\/\',raubreywhite=\'https:\\/\\/raubreywhite.github.io\\/drat\\/\',CRANX=\'https:\\/\\/packagemanager.rstudio.com\\/all\\/__linux__\\/focal\\/344\',CRAN/" /usr/local/lib/R/etc/Rprofile.site
-RUN sed -i "1s/^/dratRepo=\'\\/git\\/drat\\/\'\n/" /usr/local/lib/R/etc/Rprofile.site
+# Rprofile.site - change the repos from default
+# Add drat repo on first line
+RUN sed -i "1 i dratRepo='/git/drat/'" /usr/local/lib/R/etc/Rprofile.site
+# delete line beginning with "options(repos..."
+RUN sed -i '/^options(repos/d' /usr/local/lib/R/etc/Rprofile.site
+# Add our repo list on second line
+RUN sed -i "2 i options(repos = c(folkehelseinstituttet='https://folkehelseinstituttet.github.io/drat/',euromomo='https://euromomonetwork.github.io/drat/',raubreywhite='https://raubreywhite.github.io/drat/',CRAN = 'https://packagemanager.rstudio.com/all/__linux__/focal/$CRAN_CHECKPOINT'), download.file.method = 'libcurl')" /usr/local/lib/R/etc/Rprofile.site
 
 RUN apt-get update && apt-get install -y \
   libgdal-dev \
@@ -151,7 +156,7 @@ RUN R -e "install.packages('INLA', repos=c(getOption('repos'), INLA='https://inl
 RUN apt-get install -y jags
 
 RUN . /etc/environment \
-  && install2.r --error --skipinstalled -d TRUE -r $CRAN -n 6 \
+  && install2.r --error --skipinstalled -d TRUE -r $CRAN_CHECKPOINT -n 6 \
     surveillance \
     munsell \
     RColorBrewer \
@@ -203,7 +208,7 @@ RUN . /etc/environment \
     processx
 
 RUN . /etc/environment \
-  && install2.r --error --skipinstalled -d TRUE -r $CRAN -n 6 \
+  && install2.r --error --skipinstalled -d TRUE -r $CRAN_CHECKPOINT -n 6 \
     survminer \
     units \
     rgdal \
@@ -244,7 +249,7 @@ RUN . /etc/environment \
     mem
 
 RUN . /etc/environment \
-  && install2.r --error --skipinstalled -d FALSE -r $CRAN -n 6 \
+  && install2.r --error --skipinstalled -d FALSE -r $CRAN_CHECKPOINT -n 6 \
     DescTools \
     ppcor \
     corpcor \
@@ -252,7 +257,7 @@ RUN . /etc/environment \
     ggpubr
 
 RUN . /etc/environment \
-  && install2.r --error --skipinstalled -d TRUE -r $CRAN -n 6 \
+  && install2.r --error --skipinstalled -d TRUE -r $CRAN_CHECKPOINT -n 6 \
     samplingbook \
     writexl \
     dlnm \
