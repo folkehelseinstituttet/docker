@@ -100,7 +100,7 @@ RUN sed -i "1 i dratRepo='/git/drat/'" /usr/local/lib/R/etc/Rprofile.site
 # delete line beginning with "options(repos..."
 RUN sed -i '/^options(repos/d' /usr/local/lib/R/etc/Rprofile.site
 # Add our repo list on second line
-RUN sed -i "2 i options(repos = c(folkehelseinstituttet='https://folkehelseinstituttet.github.io/drat/',euromomo='https://euromomonetwork.github.io/drat/',raubreywhite='https://raubreywhite.github.io/drat/',CRAN = 'https://packagemanager.rstudio.com/all/__linux__/focal/$CRAN_CHECKPOINT'), download.file.method = 'libcurl')" /usr/local/lib/R/etc/Rprofile.site
+RUN sed -i "2 i options(repos = c(folkehelseinstituttet='https://folkehelseinstituttet.github.io/drat/',euromomo='https://euromomonetwork.github.io/drat/',raubreywhite='https://raubreywhite.github.io/drat/',CRAN = '$CRAN_CHECKPOINT'), download.file.method = 'libcurl')" /usr/local/lib/R/etc/Rprofile.site
 
 RUN apt-get update && apt-get install -y \
   libgdal-dev \
