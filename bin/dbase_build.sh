@@ -11,5 +11,5 @@ sudo podman build \
 --squash-all \
 --tag=fhix/dbase:$RVERSION \
 --build-arg RVERSION=$RVERSION \
---build-arg CRAN_CHECKPOINT=$CRAN_CHECKPOINT
+--build-arg CRAN_CHECKPOINT=$CRAN_CHECKPOINT \
 $WORKSPACE/dbase
