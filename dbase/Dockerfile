@@ -21,6 +21,7 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && apt-get update \
   && ACCEPT_EULA=Y apt-get install --yes --no-install-recommends msodbcsql17 \
   && DEBIAN_FRONTEND=noninteractive apt-get -yqq install krb5-user libpam-krb5
+RUN echo "auth [default=1 ignore=ignore success=ok] pam_localuser.s" >> /etc/init.d/common-auth
 
 # mysql
 #RUN apt-get install -y unixodbc unixodbc-dev libmyodbc
