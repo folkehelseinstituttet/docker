@@ -1,0 +1,12 @@
+pipeline {
+  agent any
+  stages {
+    stage('Build') {
+      steps {
+	//sh 'echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin'
+	sh '$WORKSPACE/bin/dbase2_build.sh'
+//	sh 'sudo -E $WORKSPACE/bin/dbase_push.sh'
+      }
+    }
+  }
+}
