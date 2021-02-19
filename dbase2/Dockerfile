@@ -135,8 +135,7 @@ RUN sudo echo /usr/lib/libreoffice/program/ >> /etc/ld.so.conf.d/local.conf
 RUN /sbin/ldconfig
 
 # data.table doesn't like clang
-RUN . /etc/environment \
-  && install2.r --error --skipinstalled -d TRUE -r $CRAN -n 6 \
+RUN install2.r --error --skipinstalled -d TRUE -n 6 \
     data.table \
     influenceR \
     gower \

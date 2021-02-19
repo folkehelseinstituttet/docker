@@ -1,0 +1,41 @@
+pipeline {
+  agent any
+  stages {
+
+    stage('Checkout') {
+      steps {
+	 // Get CalibrationResults from GitHub
+	 checkout([
+            $class: 'GitSCM',
+            branches: [[name: 'refs/heads/master']],
+            doGenerateSubmoduleConfigurations: false,
+            extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'xx/docker']],
+            submoduleCfg: [],
+            userRemoteConfigs: [[url: 'https://github.com/folkehelseinstituttet/docker.git']],
+	    poll: true
+        ])
+	// Get Combination from GitHub
+	 checkout([
+            $class: 'GitSCM',
+            branches: [[name: 'refs/heads/gh-pages']],
+            doGenerateSubmoduleConfigurations: false,
+            extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'xx/drat']],
+            submoduleCfg: [],
+            userRemoteConfigs: [[url: 'https://github.com/folkehelseinstituttet/drat.git']],
+	    poll: true
+        ])
+      }
+    }
+
+    stage('Build') {
+      steps {
+        sh 'echo $WORKSPACE'
+        sh 'ls'
+        sh 'pwd'
+	sh '$WORKSPACE/bin/dr2_build.sh'
+	// sh 'export PATH=$PATH:/home/jenkins/bin && echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD docker.io && $WORKSPACE/bin/dr_push.sh'
+  //      sh 'sudo -E $WORKSPACE/bin/dr_push.sh'
+      }
+    }
+  }
+}

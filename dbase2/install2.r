@@ -61,6 +61,7 @@ if (length(opt$repos) == 1) {
     }
 }
 
+
 if (opt$ncpus == "getOption") {
     opt$ncpus <- getOption("Ncpus", 1L)
 } else if (opt$ncpus == "-1") {
@@ -72,6 +73,9 @@ if (opt$ncpus == "getOption") {
 Sys.setenv("_R_SHLIB_STRIP_"="true")
 
 install_packages2 <- function(pkgs, ..., error = FALSE, skipinstalled = FALSE) {
+    dots <- list(...)
+    cat("REPOS IN USE: ", dots$repos, "\n")
+
     e <- NULL
     capture <- function(e) {
         if (error) {
