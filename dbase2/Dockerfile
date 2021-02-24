@@ -10,6 +10,7 @@ RUN ln -s /usr/local/lib/R/site-library/ /r
 
 # Rprofile.site - change the repos from default
 # Add drat repo on first line
+RUN mkdir -p /usr/local/lib/R/etc/
 RUN touch /usr/local/lib/R/etc/Rprofile.site
 RUN sed -i "1 i dratRepo='/git/drat/'" /usr/local/lib/R/etc/Rprofile.site
 # Add our repo list on second line
