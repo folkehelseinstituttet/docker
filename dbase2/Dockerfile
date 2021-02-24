@@ -104,6 +104,7 @@ RUN tlmgr install \
 
 
 RUN apt-get update && apt-get install -y \
+  git \
   libgdal-dev \
   libgeos-c1v5 \
   libproj-dev \
