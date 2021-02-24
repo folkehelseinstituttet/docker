@@ -13,4 +13,4 @@ RUN sed -i "1 i dratRepo='/git/drat/'" $R_HOME/etc/Rprofile.site
 # Add our repo list on second line
 RUN sed -i "2 i options(repos = c(folkehelseinstituttet='https://folkehelseinstituttet.github.io/drat/',euromomo='https://euromomonetwork.github.io/drat/',raubreywhite='https://raubreywhite.github.io/drat/',CRAN = '$CRAN_CHECKPOINT'), download.file.method = 'libcurl')" $R_HOME/etc/Rprofile.site
 
-RUN Rscript -e "install.packages('littler')"
+#RUN Rscript -e "install.packages('littler')"
