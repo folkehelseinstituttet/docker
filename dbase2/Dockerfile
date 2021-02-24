@@ -42,13 +42,13 @@ RUN ACCEPT_EULA=Y DEBIAN_FRONTEND=noninteractive apt-get install --yes mssql-too
 # bcp
 RUN echo PATH="$PATH:/opt/mssql-tools/bin" >> /etc/profile
 RUN echo export PATH >> /etc/profile
-RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> /usr/local/lib/R/etc/Rprofile.site
+RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> $R_HOME/etc/Rprofile.site
 
 # timezone
-# echo "TZ='Europe/Oslo'" >> /usr/local/lib/R/etc/Renviron
+# echo "TZ='Europe/Oslo'" >> $R_HOME/etc/Renviron
 RUN apt-get install -y tzdata
 RUN echo "TZ='Europe/Oslo'" >> /etc/environment
-RUN echo "TZ='Europe/Oslo'" >> /usr/local/lib/R/etc/Renviron
+RUN echo "TZ='Europe/Oslo'" >> $R_HOME/etc/Renviron
 
 # FONTS
 COPY fonts-ubuntu_0.83-4_all.deb /tmp/fonts-ubuntu_0.83-4_all.deb
