@@ -12,16 +12,20 @@
 library(docopt)
 
 ## configuration for docopt
-doc <- "Usage: install2.r [-l LIBLOC] [-h] [-x] [-s] [-d DEPS] [-n NCPUS] [-r REPOS...] [--error] [--] [PACKAGES ...]
+doc <-
 
--l --libloc LIBLOC  location in which to install [default: /usr/local/lib/R/site-library]
+paste0(
+"Usage: install2.r [-l LIBLOC] [-h] [-x] [-s] [-d DEPS] [-n NCPUS] [-r REPOS...] [--error] [--] [PACKAGES ...]
+
+-l --libloc LIBLOC  location in which to install [default: ", .libPaths()[1], "]
 -d --deps DEPS      install suggested dependencies as well [default: NA]
 -n --ncpus NCPUS    number of processes to use for parallel install [default: getOption]
 -r --repos REPOS    repositor(y|ies) to use, or NULL for file [default: getOption]
 -e --error          throw error and halt instead of a warning [default: FALSE]
 -s --skipinstalled  skip installing already installed packages [default: FALSE]
 -h --help           show this help text
--x --usage          show help and short example usage"
+-x --usage          show help and short example usage
+")
 opt <- docopt(doc)			# docopt parsing
 
 if (opt$usage) {
