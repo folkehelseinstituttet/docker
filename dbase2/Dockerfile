@@ -53,3 +53,104 @@ RUN echo "TZ='Europe/Oslo'" >> $R_HOME/etc/Renviron
 # FONTS
 COPY fonts-ubuntu_0.83-4_all.deb /tmp/fonts-ubuntu_0.83-4_all.deb
 RUN dpkg -i /tmp/fonts-ubuntu_0.83-4_all.deb
+
+RUN install2.r --error --skipinstalled -d TRUE -n 6 \
+    tinytex
+
+# tinytex needed packages
+RUN tlmgr update --self
+RUN tlmgr install \
+  svg \
+  koma-script \
+  trimspaces \
+  xcolor \
+  fancyhdr \
+  blindtext \
+  background \
+  pgf \
+  everypage \
+  datetime \
+  fmtcount \
+  float \
+  tufte-latex \
+  hardwrap \
+  titlesec \
+  textcase \
+  setspace \
+  units \
+  ulem \
+  morefloats \
+  xifthen \
+  ec \
+  multirow \
+  hyphen-norwegian \
+  palatino \
+  mathpazo \
+  fpl \
+  babel-norsk \
+  siunitx \
+  pgf \
+  algorithms \
+  algorithmicx \
+  mathdesign \
+  ly1 \
+  charter
+RUN tlmgr update --all
+
+RUN texhash
+
+RUN tlmgr install \
+  collection-latexextra
+
+
+RUN apt-get update && apt-get install -y \
+  libgdal-dev \
+  libgeos-c1v5 \
+  libproj-dev \
+  libgsl0-dev \
+  libprotobuf-dev \
+  protobuf-compiler \
+  ncftp \
+  ftp \
+  cron \
+  sshpass \
+  libglu1-mesa-dev \
+  freeglut3-dev \
+  mesa-common-dev \
+  libudunits2-dev \
+  libjq-dev \
+  libssl-dev \
+  libomp-dev \
+  tk \
+  dvipng \
+  tk-dev \
+  cargo \
+  libnetcdf-dev \
+  netcdf-bin \
+  libsodium-dev \
+  libglpk-dev
+
+# libreoffice
+RUN apt-get update && apt-get install -y libreoffice
+RUN sudo echo /usr/lib/libreoffice/program/ >> /etc/ld.so.conf.d/local.conf
+RUN /sbin/ldconfig
+
+# data.table doesn't like clang
+RUN install2.r --error --skipinstalled -d TRUE -n 6 \
+    data.table \
+    influenceR \
+    gower \
+    ggrepel \
+    lme4 \
+    arm \
+    gmailr \
+    pander \
+    httpuv \
+    ggpubr \
+    rio \
+    foreach
+
+#  INLA
+RUN R -e "install.packages('INLA', repos=c(getOption('repos'), INLA='https://inla.r-inla-download.org/R/stable'), dep=FALSE)"
+
+RUN apt-get install -y jags
