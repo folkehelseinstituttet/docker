@@ -154,3 +154,174 @@ RUN install2.r --error --skipinstalled -d TRUE -n 6 \
 RUN R -e "install.packages('INLA', repos=c(getOption('repos'), INLA='https://inla.r-inla-download.org/R/stable'), dep=FALSE)"
 
 RUN apt-get install -y jags
+
+RUN install2.r --error --skipinstalled -d TRUE -n 6 \
+    surveillance \
+    munsell \
+    RColorBrewer \
+    labeling \
+    htmltools \
+    evaluate \
+    R.utils \
+    openxlsx \
+    splitstackshape \
+    corrr \
+    ggdendro \
+    ClustOfVar \
+    plumber \
+    knitcitations \
+    bibtex \
+    brew \
+    Hmisc \
+    ggvis \
+    Formula \
+    roxygen2 \
+    packrat \
+    rms \
+    survey \
+    miniCRAN \
+    MatrixModels \
+    shiny \
+    flexdashboard \
+    pomp \
+    xgboost \
+    directlabels \
+    rstan \
+    shinystan \
+    ineq \
+    lomb \
+    rmarkdown \
+    shinyBS \
+    rgeolocate \
+    glm2 \
+    zip \
+    doSNOW \
+    drat \
+    profvis \
+    glmnet \
+    glmnetUtils \
+    pscl \
+    knitr \
+    bookdown \
+    reticulate \
+    processx
+
+RUN install2.r --error --skipinstalled -d TRUE -n 6 \
+    survminer \
+    units \
+    rgdal \
+    rgeos \
+    geojsonio \
+    rmapshaper \
+    styler \
+    uuid \
+    captioner \
+    pkgdown \
+    blastula \
+    RMariaDB \
+    pool \
+    memoise \
+    pbmcapply \
+    lemon \
+    GPArotation \
+    xlsx \
+    kableExtra \
+    cowplot \
+    GADMTools \
+    mapproj \
+    blogdown \
+    RcppProgress \
+    fancycut \
+    odbc \
+    pbapply \
+    ncdf4 \
+    huxtable \
+    svglite \
+    shinydashboard \
+    rsvg \
+    missRanger \
+    drc \
+    EnvStats \
+    RcppRoll \
+    mclust \
+    mem
+
+RUN install2.r --error --skipinstalled -d FALSE -n 6 \
+    DescTools \
+    ppcor \
+    corpcor \
+    GeneNet \
+    ggpubr
+
+RUN install2.r --error --skipinstalled -d TRUE -n 6 \
+    samplingbook \
+    writexl \
+    dlnm \
+    mvmeta \
+    pbs \
+    epitrix \
+    gh \
+    future \
+    future.callr \
+    future.apply \
+    pryr \
+    doFuture \
+    pinp \
+    egg \
+    EpiEstim \
+    epitrix \
+    shinycssloaders \
+    globals \
+    listenv \
+    learnr \
+    FluMoDL \
+    RODBC \
+    tableHTML \
+    htmlTable \
+    qs \
+    distill \
+    testthat \
+    progressr \
+    XML \
+    encryptr
+
+env LANG=C.UTF-8 DEBIAN_FRONTEND=noninteractive
+
+# reticulate, python, and marrow mailer
+RUN echo "RETICULATE_MINICONDA_ENABLED=FALSE" >> $R_HOME/etc/Renviron
+RUN apt-get install -y python3 python3-pip
+# https://github.com/marrow/mailer/issues/87
+RUN python3 -m pip install --upgrade git+https://github.com/LexMachinaInc/mailer.git
+RUN python3 -m pip install --upgrade git+https://github.com/LexMachinaInc/util.git
+
+#RUN echo "RETICULATE_MINICONDA_PATH='/miniconda'" >> $R_HOME/etc/Renviron
+#RUN echo "RETICULATE_PYTHON = '/miniconda/bin/python3'" >> $R_HOME/etc/Renviron
+#RUN Rscript -e 'reticulate::install_miniconda()'
+#RUN Rscript -e 'reticulate::conda_remove("r-reticulate")'
+#RUN Rscript -e 'reticulate::conda_create("r-reticulate",packages=c("python=3.8","numpy"))'
+#RUN chmod -R 0777 /miniconda
+#RUN Rscript -e 'reticulate::py_install("marrow.mailer",pip=T)'
+# https://github.com/marrow/mailer/issues/87
+# RUN source /miniconda/etc/profile.d/conda.sh && conda activate r-reticulate && python3 -m pip install --upgrade git+https://github.com/LexMachinaInc/mailer.git && python3 -m pip install --upgrade git+https://github.com/LexMachinaInc/util.git && conda deactivate
+# RUN source /miniconda/etc/profile.d/conda.sh && conda activate r-reticulate && conda remove email && conda deactivate
+#RUN chmod -R 0777 /miniconda
+
+# ssh
+RUN mkdir ~/.ssh/
+RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+# https://stackoverflow.com/questions/57265913/error-tcp-provider-error-code-0x2746-during-the-sql-setup-in-linux-through-te
+# https://askubuntu.com/questions/1233186/ubuntu-20-04-how-to-set-lower-ssl-security-level
+RUN sed -i '1 i\openssl_conf = default_conf' /etc/ssl/openssl.cnf
+RUN echo "[ default_conf ]" >> /etc/ssl/openssl.cnf
+RUN echo "ssl_conf = ssl_sect" >> /etc/ssl/openssl.cnf
+RUN echo "[ssl_sect]" >> /etc/ssl/openssl.cnf
+RUN echo "system_default = ssl_default_sect" >> /etc/ssl/openssl.cnf
+RUN echo "[ssl_default_sect]" >> /etc/ssl/openssl.cnf
+RUN echo "MinProtocol = TLSv1.2" >> /etc/ssl/openssl.cnf
+RUN echo "CipherString = DEFAULT:@SECLEVEL=1" >> /etc/ssl/openssl.cnf
+
+# need this for tinytex
+# RUN chmod -R 777 /root
+
+RUN rm -rf /tmp/downloaded_packages
