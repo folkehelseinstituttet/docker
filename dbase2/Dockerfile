@@ -60,6 +60,14 @@ RUN apt-get update -y
 #  && ACCEPT_EULA=Y apt-get install --yes --no-install-recommends msodbcsql17 \
 #  && DEBIAN_FRONTEND=noninteractive apt-get -yqq install krb5-user libpam-krb5
 
+# bcp for copying data directly to MSSQL
+# RUN ACCEPT_EULA=Y DEBIAN_FRONTEND=noninteractive apt-get install --yes mssql-tools
+
+# bcp
+# RUN echo PATH="$PATH:/opt/mssql-tools/bin" >> /etc/profile
+# RUN echo export PATH >> /etc/profile
+# RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> $R_HOME/etc/Rprofile.site
+
 # mysql
 #RUN apt-get install -y unixodbc unixodbc-dev libmyodbc
 #RUN mkdir -p /usr/lib/x86_64-linux-gnu/odbc/
@@ -68,14 +76,6 @@ RUN apt-get update -y
 #RUN cd /tmp; tar -xvf /tmp/mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64.tar.gz
 #RUN cd /tmp; sudo cp mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64/lib/libmyodbc8* /usr/lib/x86_64-linux-gnu/odbc/
 #RUN sudo /tmp/mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64/bin/myodbc-installer -d -a -n "MySQL" -t "DRIVER=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8w.so;Setup=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8S.so;"
-
-# bcp for copying data directly to MSSQL
-RUN ACCEPT_EULA=Y DEBIAN_FRONTEND=noninteractive apt-get install --yes mssql-tools
-
-# bcp
-RUN echo PATH="$PATH:/opt/mssql-tools/bin" >> /etc/profile
-RUN echo export PATH >> /etc/profile
-RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> $R_HOME/etc/Rprofile.site
 
 # timezone
 # echo "TZ='Europe/Oslo'" >> $R_HOME/etc/Renviron
