@@ -3,6 +3,40 @@ ARG CRAN_CHECKPOINT=CRAN_CHECKPOINT
 FROM rstudio/r-base:${RVERSION}-focal
 ENV R_HOME="/opt/R/${RVERSION}/lib/R"
 
+# RSTUDIO SERVER PRO START
+# Locale configuration --------------------------------------------------------#
+RUN localedef -i en_US -f UTF-8 en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+ENV DEBIAN_FRONTEND=noninteractive
+
+# hadolint ignore=DL3008,DL3009
+RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
+        xz-utils \
+        bzip2 \
+        ca-certificates \
+        gdebi-core \
+        git \
+        libcap2 \
+        libglib2.0-0 \
+        libpq5 \
+        libsm6 \
+        libssl1.1 \
+        libssl-dev \
+        libuser \
+        libuser1-dev \
+        libxext6 \
+        libxrender1 \
+        openssh-client \
+        rrdtool \
+	sudo \
+        wget \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# RSTUDIO SERVER PRO END
+
 # install2.r
 COPY install2.r /usr/local/bin/install2.r
 
@@ -20,12 +54,11 @@ RUN apt-get clean
 RUN apt-get update -y
 
 ## Kerberos for SQL server auth and mssql drivers
-RUN apt-get install --yes apt-transport-https curl gnupg
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-  && curl https://packages.microsoft.com/config/ubuntu/19.10/prod.list > /etc/apt/sources.list.d/mssql-release.list \
-  && apt-get update \
-  && ACCEPT_EULA=Y apt-get install --yes --no-install-recommends msodbcsql17 \
-  && DEBIAN_FRONTEND=noninteractive apt-get -yqq install krb5-user libpam-krb5
+#RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+#  && curl https://packages.microsoft.com/config/ubuntu/19.10/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+#  && apt-get update \
+#  && ACCEPT_EULA=Y apt-get install --yes --no-install-recommends msodbcsql17 \
+#  && DEBIAN_FRONTEND=noninteractive apt-get -yqq install krb5-user libpam-krb5
 
 # mysql
 #RUN apt-get install -y unixodbc unixodbc-dev libmyodbc
