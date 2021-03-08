@@ -47,6 +47,7 @@ RUN wget https://cdn.rstudio.com/r/centos-8/pkgs/R-${R_VERSION}-1-1.x86_64.rpm &
     ln -s /opt/R/${R_VERSION}/lib/R /usr/lib/R && \
     rm R-${R_VERSION}-1-1.x86_64.rpm && \
     dnf clean all
+RUN  ln -s /opt/R/${R_VERSION}/lib/R/lib/libRblas.so /usr/lib64/
 
 # Install stuff
 # install2.r
