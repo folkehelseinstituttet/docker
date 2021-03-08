@@ -1,72 +1,35 @@
 ARG RVERSION=RVERSION
 ARG CRAN_CHECKPOINT=CRAN_CHECKPOINT
 FROM rstudio/r-base:${RVERSION}-focal
-ENV R_HOME="/opt/R/${RVERSION}/lib/R"
 
-# RSTUDIO SERVER PRO START
-# Locale configuration --------------------------------------------------------#
-RUN localedef -i en_US -f UTF-8 en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
-ENV DEBIAN_FRONTEND=noninteractive
-
-# hadolint ignore=DL3008,DL3009
-RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
-        xz-utils \
-        bzip2 \
-        ca-certificates \
-        gdebi-core \
-        git \
-        libcap2 \
-        libglib2.0-0 \
-        libpq5 \
-        libsm6 \
-        libssl1.1 \
-        libssl-dev \
-        libuser \
-        libuser1-dev \
-        libxext6 \
-        libxrender1 \
-        openssh-client \
-        rrdtool \
-	sudo \
-        wget \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
-# RSTUDIO SERVER PRO END
+RUN touch /etc/profile.d/r.sh
+RUN echo "export R_HOME=/opt/R/4.0.2" >> /etc/profile.d/r.sh
 
 # install2.r
 COPY install2.r /usr/local/bin/install2.r
 
+# soft link to site library
+RUN ln -s /usr/local/lib/R/site-library/ /r
+
 # Rprofile.site - change the repos from default
 # Add drat repo on first line
-RUN echo 'dratRepo="/git/drat/"' >> $R_HOME/etc/Rprofile.site
+RUN mkdir -p /usr/local/lib/R/etc/
+RUN touch /usr/local/lib/R/etc/Rprofile.site
+RUN sed -i "1 i dratRepo='/git/drat/'" /usr/local/lib/R/etc/Rprofile.site
 # Add our repo list on second line
-RUN echo "options(repos = c(folkehelseinstituttet='https://folkehelseinstituttet.github.io/drat/',euromomo='https://euromomonetwork.github.io/drat/',raubreywhite='https://raubreywhite.github.io/drat/',CRAN = '$CRAN_CHECKPOINT'), download.file.method = 'libcurl')" >> $R_HOME/etc/Rprofile.site
-
-RUN Rscript -e "install.packages(c('littler','docopt'))"
-RUN ln -s $R_HOME/library/littler/bin/r /usr/local/bin/r
+RUN sed -i "2 i options(repos = c(folkehelseinstituttet='https://folkehelseinstituttet.github.io/drat/',euromomo='https://euromomonetwork.github.io/drat/',raubreywhite='https://raubreywhite.github.io/drat/',CRAN = '$CRAN_CHECKPOINT'), download.file.method = 'libcurl')" /usr/local/lib/R/etc/Rprofile.site
 
 # update
 RUN apt-get clean
 RUN apt-get update -y
 
 ## Kerberos for SQL server auth and mssql drivers
-#RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-#  && curl https://packages.microsoft.com/config/ubuntu/19.10/prod.list > /etc/apt/sources.list.d/mssql-release.list \
-#  && apt-get update \
-#  && ACCEPT_EULA=Y apt-get install --yes --no-install-recommends msodbcsql17 \
+RUN apt-get install --yes apt-transport-https curl gnupg
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+  && curl https://packages.microsoft.com/config/ubuntu/19.10/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+  && apt-get update \
+  && ACCEPT_EULA=Y apt-get install --yes --no-install-recommends msodbcsql17 #\
 #  && DEBIAN_FRONTEND=noninteractive apt-get -yqq install krb5-user libpam-krb5
-
-# bcp for copying data directly to MSSQL
-# RUN ACCEPT_EULA=Y DEBIAN_FRONTEND=noninteractive apt-get install --yes mssql-tools
-
-# bcp
-# RUN echo PATH="$PATH:/opt/mssql-tools/bin" >> /etc/profile
-# RUN echo export PATH >> /etc/profile
-# RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> $R_HOME/etc/Rprofile.site
 
 # mysql
 #RUN apt-get install -y unixodbc unixodbc-dev libmyodbc
@@ -77,11 +40,19 @@ RUN apt-get update -y
 #RUN cd /tmp; sudo cp mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64/lib/libmyodbc8* /usr/lib/x86_64-linux-gnu/odbc/
 #RUN sudo /tmp/mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64/bin/myodbc-installer -d -a -n "MySQL" -t "DRIVER=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8w.so;Setup=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8S.so;"
 
+# bcp for copying data directly to MSSQL
+RUN ACCEPT_EULA=Y DEBIAN_FRONTEND=noninteractive apt-get install --yes mssql-tools
+
+# bcp
+RUN echo PATH="$PATH:/opt/mssql-tools/bin" >> /etc/profile
+RUN echo export PATH >> /etc/profile
+RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> /usr/local/lib/R/etc/Rprofile.site
+
 # timezone
-# echo "TZ='Europe/Oslo'" >> $R_HOME/etc/Renviron
+# echo "TZ='Europe/Oslo'" >> /usr/local/lib/R/etc/Renviron
 RUN apt-get install -y tzdata
 RUN echo "TZ='Europe/Oslo'" >> /etc/environment
-RUN echo "TZ='Europe/Oslo'" >> $R_HOME/etc/Renviron
+RUN echo "TZ='Europe/Oslo'" >> /usr/local/lib/R/etc/Renviron
 
 # FONTS
 COPY fonts-ubuntu_0.83-4_all.deb /tmp/fonts-ubuntu_0.83-4_all.deb
@@ -137,7 +108,6 @@ RUN tlmgr install \
 
 
 RUN apt-get update && apt-get install -y \
-  git \
   libgdal-dev \
   libgeos-c1v5 \
   libproj-dev \
@@ -322,14 +292,14 @@ RUN install2.r --error --skipinstalled -d TRUE -n 6 \
 env LANG=C.UTF-8 DEBIAN_FRONTEND=noninteractive
 
 # reticulate, python, and marrow mailer
-RUN echo "RETICULATE_MINICONDA_ENABLED=FALSE" >> $R_HOME/etc/Renviron
+RUN echo "RETICULATE_MINICONDA_ENABLED=FALSE" >> /usr/local/lib/R/etc/Renviron
 RUN apt-get install -y python3 python3-pip
 # https://github.com/marrow/mailer/issues/87
 RUN python3 -m pip install --upgrade git+https://github.com/LexMachinaInc/mailer.git
 RUN python3 -m pip install --upgrade git+https://github.com/LexMachinaInc/util.git
 
-#RUN echo "RETICULATE_MINICONDA_PATH='/miniconda'" >> $R_HOME/etc/Renviron
-#RUN echo "RETICULATE_PYTHON = '/miniconda/bin/python3'" >> $R_HOME/etc/Renviron
+#RUN echo "RETICULATE_MINICONDA_PATH='/miniconda'" >> /usr/local/lib/R/etc/Renviron
+#RUN echo "RETICULATE_PYTHON = '/miniconda/bin/python3'" >> /usr/local/lib/R/etc/Renviron
 #RUN Rscript -e 'reticulate::install_miniconda()'
 #RUN Rscript -e 'reticulate::conda_remove("r-reticulate")'
 #RUN Rscript -e 'reticulate::conda_create("r-reticulate",packages=c("python=3.8","numpy"))'
@@ -356,6 +326,6 @@ RUN echo "MinProtocol = TLSv1.2" >> /etc/ssl/openssl.cnf
 RUN echo "CipherString = DEFAULT:@SECLEVEL=1" >> /etc/ssl/openssl.cnf
 
 # need this for tinytex
-# RUN chmod -R 777 /root
+RUN chmod -R 777 /root
 
 RUN rm -rf /tmp/downloaded_packages

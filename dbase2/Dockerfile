@@ -1,361 +1,52 @@
-ARG RVERSION=RVERSION
-ARG CRAN_CHECKPOINT=CRAN_CHECKPOINT
-FROM rstudio/r-base:${RVERSION}-focal
-ENV R_HOME="/opt/R/${RVERSION}/lib/R"
+FROM registry.access.redhat.com/ubi8/ubi-init:latest
+ARG R_VERSION=4.0.4
 
-# RSTUDIO SERVER PRO START
-# Locale configuration --------------------------------------------------------#
-RUN localedef -i en_US -f UTF-8 en_US.UTF-8
+RUN dnf install -y --disableplugin=subscription-manager sudo
+
+RUN dnf -y update && \
+    dnf -y install \
+    fontconfig \
+    glibc-langpack-en \
+    perl-Digest-MD5 \
+    perl-Getopt-Long \
+    sudo \
+    vim \
+    wget && \
+    dnf clean all
+
+# Install TinyTeX
+RUN wget -qO- "https://yihui.org/tinytex/install-bin-unix.sh" | sh && \
+    /root/.TinyTeX/bin/*/tlmgr path remove && \
+    mv /root/.TinyTeX/ /opt/TinyTeX && \
+    /opt/TinyTeX/bin/*/tlmgr option sys_bin /usr/local/bin && \
+    /opt/TinyTeX/bin/*/tlmgr path add
+
+# Install pandoc
+RUN mkdir -p /opt/pandoc && \
+    wget -O /opt/pandoc/pandoc.gz https://files.r-hub.io/pandoc/linux-64/pandoc.gz && \
+    gzip -d /opt/pandoc/pandoc.gz && \
+    chmod +x /opt/pandoc/pandoc && \
+    ln -s /opt/pandoc/pandoc /usr/bin/pandoc && \
+    wget -O /opt/pandoc/pandoc-citeproc.gz https://files.r-hub.io/pandoc/linux-64/pandoc-citeproc.gz && \
+    gzip -d /opt/pandoc/pandoc-citeproc.gz && \
+    chmod +x /opt/pandoc/pandoc-citeproc && \
+    ln -s /opt/pandoc/pandoc-citeproc /usr/bin/pandoc-citeproc
+
+# Set default locale
 ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
-ENV DEBIAN_FRONTEND=noninteractive
 
-# hadolint ignore=DL3008,DL3009
-RUN apt-get update --fix-missing && apt-get install -y --no-install-recommends \
-        xz-utils \
-        bzip2 \
-        ca-certificates \
-        gdebi-core \
-        git \
-        libcap2 \
-        libglib2.0-0 \
-        libpq5 \
-        libsm6 \
-        libssl1.1 \
-        libssl-dev \
-        libuser \
-        libuser1-dev \
-        libxext6 \
-        libxrender1 \
-        openssh-client \
-        rrdtool \
-	sudo \
-        wget \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Set default timezone
+ENV TZ UTC
 
-# RSTUDIO SERVER PRO END
+# Install R
+RUN wget https://cdn.rstudio.com/r/${OS_IDENTIFIER}/pkgs/R-${R_VERSION}-1-1.x86_64.rpm && \
+    yum -y install epel-release && \
+    yum -y install ./R-${R_VERSION}-1-1.x86_64.rpm && \
+    ln -s /opt/R/${R_VERSION}/bin/R /usr/bin/R && \
+    ln -s /opt/R/${R_VERSION}/bin/Rscript /usr/bin/Rscript && \
+    ln -s /opt/R/${R_VERSION}/lib/R /usr/lib/R && \
+    rm R-${R_VERSION}-1-1.x86_64.rpm && \
+    yum -y remove epel-release && \
+    yum clean all
 
-# install2.r
-COPY install2.r /usr/local/bin/install2.r
-
-# Rprofile.site - change the repos from default
-# Add drat repo on first line
-RUN echo 'dratRepo="/git/drat/"' >> $R_HOME/etc/Rprofile.site
-# Add our repo list on second line
-RUN echo "options(repos = c(folkehelseinstituttet='https://folkehelseinstituttet.github.io/drat/',euromomo='https://euromomonetwork.github.io/drat/',raubreywhite='https://raubreywhite.github.io/drat/',CRAN = '$CRAN_CHECKPOINT'), download.file.method = 'libcurl')" >> $R_HOME/etc/Rprofile.site
-
-RUN Rscript -e "install.packages(c('littler','docopt'))"
-RUN ln -s $R_HOME/library/littler/bin/r /usr/local/bin/r
-
-# update
-RUN apt-get clean
-RUN apt-get update -y
-
-## Kerberos for SQL server auth and mssql drivers
-#RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-#  && curl https://packages.microsoft.com/config/ubuntu/19.10/prod.list > /etc/apt/sources.list.d/mssql-release.list \
-#  && apt-get update \
-#  && ACCEPT_EULA=Y apt-get install --yes --no-install-recommends msodbcsql17 \
-#  && DEBIAN_FRONTEND=noninteractive apt-get -yqq install krb5-user libpam-krb5
-
-# bcp for copying data directly to MSSQL
-# RUN ACCEPT_EULA=Y DEBIAN_FRONTEND=noninteractive apt-get install --yes mssql-tools
-
-# bcp
-# RUN echo PATH="$PATH:/opt/mssql-tools/bin" >> /etc/profile
-# RUN echo export PATH >> /etc/profile
-# RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> $R_HOME/etc/Rprofile.site
-
-# mysql
-#RUN apt-get install -y unixodbc unixodbc-dev libmyodbc
-#RUN mkdir -p /usr/lib/x86_64-linux-gnu/odbc/
-#COPY mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64.deb /tmp/
-#RUN dpkg -i /tmp/mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64.deb sudo apt-get install -f.
-#RUN cd /tmp; tar -xvf /tmp/mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64.tar.gz
-#RUN cd /tmp; sudo cp mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64/lib/libmyodbc8* /usr/lib/x86_64-linux-gnu/odbc/
-#RUN sudo /tmp/mysql-connector-odbc-setup_8.0.20-1ubuntu20.04_amd64/bin/myodbc-installer -d -a -n "MySQL" -t "DRIVER=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8w.so;Setup=/usr/lib/x86_64-linux-gnu/odbc/libmyodbc8S.so;"
-
-# timezone
-# echo "TZ='Europe/Oslo'" >> $R_HOME/etc/Renviron
-RUN apt-get install -y tzdata
-RUN echo "TZ='Europe/Oslo'" >> /etc/environment
-RUN echo "TZ='Europe/Oslo'" >> $R_HOME/etc/Renviron
-
-# FONTS
-COPY fonts-ubuntu_0.83-4_all.deb /tmp/fonts-ubuntu_0.83-4_all.deb
-RUN dpkg -i /tmp/fonts-ubuntu_0.83-4_all.deb
-
-RUN install2.r --error --skipinstalled -d TRUE -n 6 \
-    tinytex
-
-# tinytex needed packages
-RUN tlmgr update --self
-RUN tlmgr install \
-  svg \
-  koma-script \
-  trimspaces \
-  xcolor \
-  fancyhdr \
-  blindtext \
-  background \
-  pgf \
-  everypage \
-  datetime \
-  fmtcount \
-  float \
-  tufte-latex \
-  hardwrap \
-  titlesec \
-  textcase \
-  setspace \
-  units \
-  ulem \
-  morefloats \
-  xifthen \
-  ec \
-  multirow \
-  hyphen-norwegian \
-  palatino \
-  mathpazo \
-  fpl \
-  babel-norsk \
-  siunitx \
-  pgf \
-  algorithms \
-  algorithmicx \
-  mathdesign \
-  ly1 \
-  charter
-RUN tlmgr update --all
-
-RUN texhash
-
-RUN tlmgr install \
-  collection-latexextra
-
-
-RUN apt-get update && apt-get install -y \
-  git \
-  libgdal-dev \
-  libgeos-c1v5 \
-  libproj-dev \
-  libgsl0-dev \
-  libprotobuf-dev \
-  protobuf-compiler \
-  ncftp \
-  ftp \
-  cron \
-  sshpass \
-  libglu1-mesa-dev \
-  freeglut3-dev \
-  mesa-common-dev \
-  libudunits2-dev \
-  libjq-dev \
-  libssl-dev \
-  libomp-dev \
-  tk \
-  dvipng \
-  tk-dev \
-  cargo \
-  libnetcdf-dev \
-  netcdf-bin \
-  libsodium-dev \
-  libglpk-dev
-
-# libreoffice
-RUN apt-get update && apt-get install -y libreoffice
-RUN sudo echo /usr/lib/libreoffice/program/ >> /etc/ld.so.conf.d/local.conf
-RUN /sbin/ldconfig
-
-# data.table doesn't like clang
-RUN install2.r --error --skipinstalled -d TRUE -n 6 \
-    data.table \
-    influenceR \
-    gower \
-    ggrepel \
-    lme4 \
-    arm \
-    gmailr \
-    pander \
-    httpuv \
-    ggpubr \
-    rio \
-    foreach
-
-#  INLA
-RUN R -e "install.packages('INLA', repos=c(getOption('repos'), INLA='https://inla.r-inla-download.org/R/stable'), dep=FALSE)"
-
-RUN apt-get install -y jags
-
-RUN install2.r --error --skipinstalled -d TRUE -n 6 \
-    surveillance \
-    munsell \
-    RColorBrewer \
-    labeling \
-    htmltools \
-    evaluate \
-    R.utils \
-    openxlsx \
-    splitstackshape \
-    corrr \
-    ggdendro \
-    ClustOfVar \
-    plumber \
-    knitcitations \
-    bibtex \
-    brew \
-    Hmisc \
-    ggvis \
-    Formula \
-    roxygen2 \
-    packrat \
-    rms \
-    survey \
-    miniCRAN \
-    MatrixModels \
-    shiny \
-    flexdashboard \
-    pomp \
-    xgboost \
-    directlabels \
-    rstan \
-    shinystan \
-    ineq \
-    lomb \
-    rmarkdown \
-    shinyBS \
-    rgeolocate \
-    glm2 \
-    zip \
-    doSNOW \
-    drat \
-    profvis \
-    glmnet \
-    glmnetUtils \
-    pscl \
-    knitr \
-    bookdown \
-    reticulate \
-    processx
-
-RUN install2.r --error --skipinstalled -d TRUE -n 6 \
-    survminer \
-    units \
-    rgdal \
-    rgeos \
-    geojsonio \
-    rmapshaper \
-    styler \
-    uuid \
-    captioner \
-    pkgdown \
-    blastula \
-    RMariaDB \
-    pool \
-    memoise \
-    pbmcapply \
-    lemon \
-    GPArotation \
-    xlsx \
-    kableExtra \
-    cowplot \
-    GADMTools \
-    mapproj \
-    blogdown \
-    RcppProgress \
-    fancycut \
-    odbc \
-    pbapply \
-    ncdf4 \
-    huxtable \
-    svglite \
-    shinydashboard \
-    rsvg \
-    missRanger \
-    drc \
-    EnvStats \
-    RcppRoll \
-    mclust \
-    mem
-
-RUN install2.r --error --skipinstalled -d FALSE -n 6 \
-    DescTools \
-    ppcor \
-    corpcor \
-    GeneNet \
-    ggpubr
-
-RUN install2.r --error --skipinstalled -d TRUE -n 6 \
-    samplingbook \
-    writexl \
-    dlnm \
-    mvmeta \
-    pbs \
-    epitrix \
-    gh \
-    future \
-    future.callr \
-    future.apply \
-    pryr \
-    doFuture \
-    pinp \
-    egg \
-    EpiEstim \
-    epitrix \
-    shinycssloaders \
-    globals \
-    listenv \
-    learnr \
-    FluMoDL \
-    RODBC \
-    tableHTML \
-    htmlTable \
-    qs \
-    distill \
-    testthat \
-    progressr \
-    XML \
-    encryptr
-
-env LANG=C.UTF-8 DEBIAN_FRONTEND=noninteractive
-
-# reticulate, python, and marrow mailer
-RUN echo "RETICULATE_MINICONDA_ENABLED=FALSE" >> $R_HOME/etc/Renviron
-RUN apt-get install -y python3 python3-pip
-# https://github.com/marrow/mailer/issues/87
-RUN python3 -m pip install --upgrade git+https://github.com/LexMachinaInc/mailer.git
-RUN python3 -m pip install --upgrade git+https://github.com/LexMachinaInc/util.git
-
-#RUN echo "RETICULATE_MINICONDA_PATH='/miniconda'" >> $R_HOME/etc/Renviron
-#RUN echo "RETICULATE_PYTHON = '/miniconda/bin/python3'" >> $R_HOME/etc/Renviron
-#RUN Rscript -e 'reticulate::install_miniconda()'
-#RUN Rscript -e 'reticulate::conda_remove("r-reticulate")'
-#RUN Rscript -e 'reticulate::conda_create("r-reticulate",packages=c("python=3.8","numpy"))'
-#RUN chmod -R 0777 /miniconda
-#RUN Rscript -e 'reticulate::py_install("marrow.mailer",pip=T)'
-# https://github.com/marrow/mailer/issues/87
-# RUN source /miniconda/etc/profile.d/conda.sh && conda activate r-reticulate && python3 -m pip install --upgrade git+https://github.com/LexMachinaInc/mailer.git && python3 -m pip install --upgrade git+https://github.com/LexMachinaInc/util.git && conda deactivate
-# RUN source /miniconda/etc/profile.d/conda.sh && conda activate r-reticulate && conda remove email && conda deactivate
-#RUN chmod -R 0777 /miniconda
-
-# ssh
-RUN mkdir ~/.ssh/
-RUN ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-# https://stackoverflow.com/questions/57265913/error-tcp-provider-error-code-0x2746-during-the-sql-setup-in-linux-through-te
-# https://askubuntu.com/questions/1233186/ubuntu-20-04-how-to-set-lower-ssl-security-level
-RUN sed -i '1 i\openssl_conf = default_conf' /etc/ssl/openssl.cnf
-RUN echo "[ default_conf ]" >> /etc/ssl/openssl.cnf
-RUN echo "ssl_conf = ssl_sect" >> /etc/ssl/openssl.cnf
-RUN echo "[ssl_sect]" >> /etc/ssl/openssl.cnf
-RUN echo "system_default = ssl_default_sect" >> /etc/ssl/openssl.cnf
-RUN echo "[ssl_default_sect]" >> /etc/ssl/openssl.cnf
-RUN echo "MinProtocol = TLSv1.2" >> /etc/ssl/openssl.cnf
-RUN echo "CipherString = DEFAULT:@SECLEVEL=1" >> /etc/ssl/openssl.cnf
-
-# need this for tinytex
-# RUN chmod -R 777 /root
-
-RUN rm -rf /tmp/downloaded_packages
+CMD ["R"]
