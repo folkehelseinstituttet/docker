@@ -1,6 +1,6 @@
 #!/bin/bash
 export NOCACHE=--no-cache
-source $WORKSPACE/bin/R_VERSION.sh
+source $WORKSPACE/bin/env.sh
 
 sudo podman rmi fhix/dr:$R_VERSION
 
