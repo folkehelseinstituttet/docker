@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export RVERSION=4.0.2
+export R_VERSION=4.0.2
 
 # currently we are snapshotted to Jan 12, 2021 1:00 AM GMT+1 for Ubuntu 20.04 (Focal)
 # This is very important, because R package pool 0.1.6 (released 2021-01-14) does not
