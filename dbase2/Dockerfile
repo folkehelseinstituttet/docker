@@ -1,5 +1,6 @@
 FROM registry.access.redhat.com/ubi8/ubi-init:latest
 ARG R_VERSION=4.0.4
+ARG OS_IDENTIFIER=centos-8
 
 RUN dnf install -y --disableplugin=subscription-manager sudo
 
