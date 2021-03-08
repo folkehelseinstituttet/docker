@@ -40,13 +40,11 @@ ENV TZ UTC
 
 # Install R
 RUN wget https://cdn.rstudio.com/r/centos-8/pkgs/R-${R_VERSION}-1-1.x86_64.rpm && \
-    dnf -y install epel-release && \
     dnf -y install ./R-${R_VERSION}-1-1.x86_64.rpm && \
     ln -s /opt/R/${R_VERSION}/bin/R /usr/bin/R && \
     ln -s /opt/R/${R_VERSION}/bin/Rscript /usr/bin/Rscript && \
     ln -s /opt/R/${R_VERSION}/lib/R /usr/lib/R && \
     rm R-${R_VERSION}-1-1.x86_64.rpm && \
-    dnf -y remove epel-release && \
     dnf clean all
 
 CMD ["R"]
