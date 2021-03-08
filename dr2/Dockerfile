@@ -3,7 +3,6 @@ FROM fhix/dbase2:${R_VERSION}
 MAINTAINER "Carl Boettiger and Dirk Eddelbuettel" rocker-maintainers@eddelbuettel.com
 
 # update
-RUN dnf clean
 RUN dnf update -y
 
 # TEMPORARY SOLUTIONS UNTIL THE PACKAGE MAKES ITS WAY TO CRAN
