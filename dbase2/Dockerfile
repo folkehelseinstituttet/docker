@@ -1,6 +1,13 @@
 FROM registry.access.redhat.com/ubi8/ubi-init:latest
 ARG R_VERSION=4.0.4
 
+ENV R_HOME="/opt/R/${R_VERSION}/lib/R"
+# Set default locale
+ENV LANG en_US.UTF-8
+
+# Set default timezone
+ENV TZ UTC
+
 RUN dnf install -y --disableplugin=subscription-manager sudo
 
 RUN dnf -y update && \
@@ -32,12 +39,6 @@ RUN mkdir -p /opt/pandoc && \
     chmod +x /opt/pandoc/pandoc-citeproc && \
     ln -s /opt/pandoc/pandoc-citeproc /usr/bin/pandoc-citeproc
 
-# Set default locale
-ENV LANG en_US.UTF-8
-
-# Set default timezone
-ENV TZ UTC
-
 # Install R
 RUN wget https://cdn.rstudio.com/r/centos-8/pkgs/R-${R_VERSION}-1-1.x86_64.rpm && \
     dnf -y install ./R-${R_VERSION}-1-1.x86_64.rpm && \
@@ -46,5 +47,18 @@ RUN wget https://cdn.rstudio.com/r/centos-8/pkgs/R-${R_VERSION}-1-1.x86_64.rpm &
     ln -s /opt/R/${R_VERSION}/lib/R /usr/lib/R && \
     rm R-${R_VERSION}-1-1.x86_64.rpm && \
     dnf clean all
+
+# Install stuff
+# install2.r
+COPY install2.r /usr/local/bin/install2.r
+
+# Rprofile.site - change the repos from default
+# Add drat repo on first line
+RUN echo 'dratRepo="/git/drat/"' >> $R_HOME/etc/Rprofile.site
+# Add our repo list on second line
+RUN echo "options(repos = c(folkehelseinstituttet='https://folkehelseinstituttet.github.io/drat/',euromomo='https://euromomonetwork.github.io/drat/',raubreywhite='https://raubreywhite.github.io/drat/',CRAN = '$CRAN_CHECKPOINT'), download.file.method = 'libcurl')" >> $R_HOME/etc/Rprofile.site
+
+RUN Rscript -e "install.packages(c('littler','docopt'))"
+RUN ln -s $R_HOME/library/littler/bin/r /usr/local/bin/r
 
 CMD ["R"]

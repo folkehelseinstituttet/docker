@@ -3,8 +3,8 @@ FROM fhix/dbase2:${R_VERSION}
 MAINTAINER "Carl Boettiger and Dirk Eddelbuettel" rocker-maintainers@eddelbuettel.com
 
 # update
-RUN apt-get clean
-RUN apt-get update -y
+RUN dnf clean
+RUN dnf update -y
 
 # TEMPORARY SOLUTIONS UNTIL THE PACKAGE MAKES ITS WAY TO CRAN
 # RUN R -e 'devtools::install_github("HenrikBengtsson/progressr")'
