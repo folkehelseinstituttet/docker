@@ -10,21 +10,24 @@ RUN dnf update -y
 # RUN R -e 'devtools::install_github("rstudio/plumber")'
 
 # DRAT PACKAGES FROM EUROMOMO
-RUN install2.r --error \
-  MOMO
+#RUN install2.r --error \
+#  MOMO
 
 ## DRAT PACKAGES FROM RICHARD
-RUN install2.r --error \
-  RAWmisc
+#RUN install2.r --error \
+#  RAWmisc
 
 ## DRAT PACKAGES FROM FHI
+#RUN install2.r --error \
+#  org \
+#  plnr \
+#  fhidata \
+#  fhimaps \
+#  fhiplot \
+#  fhi \
+#  spread \
+#  attrib \
+#  flumomo
+
 RUN install2.r --error \
-  org \
-  plnr \
-  fhidata \
-  fhimaps \
-  fhiplot \
-  fhi \
-  spread \
-  attrib \
-  flumomo
+  fhidata
