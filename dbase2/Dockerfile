@@ -1,6 +1,5 @@
 FROM registry.access.redhat.com/ubi8/ubi-init:latest
 ARG R_VERSION=4.0.4
-ARG OS_IDENTIFIER=centos-8
 
 RUN dnf install -y --disableplugin=subscription-manager sudo
 
@@ -40,7 +39,7 @@ ENV LANG en_US.UTF-8
 ENV TZ UTC
 
 # Install R
-RUN wget https://cdn.rstudio.com/r/${OS_IDENTIFIER}/pkgs/R-${R_VERSION}-1-1.x86_64.rpm && \
+RUN wget https://cdn.rstudio.com/r/centos-8/pkgs/R-${R_VERSION}-1-1.x86_64.rpm && \
     dnf -y install epel-release && \
     dnf -y install ./R-${R_VERSION}-1-1.x86_64.rpm && \
     ln -s /opt/R/${R_VERSION}/bin/R /usr/bin/R && \
