@@ -10,6 +10,7 @@ ENV LANG en_US.UTF-8
 # Set default timezone
 ENV TZ UTC
 
+RUN dnf install -y epel-release
 RUN dnf config-manager --set-enabled powertools
 RUN dnf install -y --disableplugin=subscription-manager sudo
 
