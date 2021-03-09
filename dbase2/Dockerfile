@@ -1,6 +1,7 @@
 FROM registry.access.redhat.com/ubi8/ubi-init:latest
 #FROM centos:centos8
 ARG R_VERSION=4.0.4
+ARG CRAN_CHECKPOINT=https://packagemanager.rstudio.com/all/766976
 
 ENV R_HOME="/opt/R/${R_VERSION}/lib/R"
 # Set default locale
@@ -53,7 +54,11 @@ RUN  ln -s /opt/R/${R_VERSION}/lib/R/lib/libRblas.so /usr/lib64/
 # Install stuff
 RUN dnf -y update && \
     dnf -y install \
-    openssl-devel && \
+    openssl-devel \
+    libxml2-devel \
+    fontconfig-devel \
+    libgit2-devel \
+    && \
     dnf clean all
 
 # install2.r
