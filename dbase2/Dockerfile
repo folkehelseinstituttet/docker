@@ -62,4 +62,8 @@ RUN echo "options(repos = c(folkehelseinstituttet='https://folkehelseinstituttet
 RUN Rscript -e "install.packages(c('littler','docopt'))"
 RUN ln -s $R_HOME/library/littler/bin/r /usr/local/bin/r
 
+RUN install2.r --error --skipinstalled -d TRUE -n 6 \
+    tinytex \
+    devtools
+
 CMD ["R"]
