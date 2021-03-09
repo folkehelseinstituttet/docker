@@ -63,6 +63,8 @@ RUN dnf -y update && \
     libxml2-devel \
     fontconfig-devel \
     libgit2-devel \
+    harfbuzz-devel \
+    fribidi-devel \
     && \
     dnf clean all
 
