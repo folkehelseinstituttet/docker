@@ -10,6 +10,7 @@ ENV LANG en_US.UTF-8
 # Set default timezone
 ENV TZ UTC
 
+RUN dnf config-manager --set-enabled powertools
 RUN dnf install -y --disableplugin=subscription-manager sudo
 
 RUN dnf -y update && \
@@ -52,6 +53,10 @@ RUN wget https://cdn.rstudio.com/r/centos-8/pkgs/R-${R_VERSION}-1-1.x86_64.rpm &
 RUN  ln -s /opt/R/${R_VERSION}/lib/R/lib/libRblas.so /usr/lib64/
 
 # Install stuff
+RUN wget https://rpmfind.net/linux/centos/8.3.2011/PowerTools/x86_64/os/Packages/libgit2-devel-0.26.8-2.el8.i686.rpm && \
+    dnf -y install ./libgit2-devel-0.26.8-2.el8.i686.rpm && \
+    rm libgit2-devel-0.26.8-2.el8.i686.rpm
+
 RUN dnf -y update && \
     dnf -y install \
     openssl-devel \
