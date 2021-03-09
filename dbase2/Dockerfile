@@ -67,6 +67,7 @@ RUN dnf -y update && \
     libjpeg-turbo-devel \
     unixODBC-devel \
     cairo-devel \
+    libsodium-devel \
     && \
     dnf clean all
 
