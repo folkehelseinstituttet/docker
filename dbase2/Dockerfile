@@ -1,5 +1,5 @@
-FROM registry.access.redhat.com/ubi8/ubi-init:latest
-#FROM centos:centos8
+#FROM registry.access.redhat.com/ubi8/ubi-init:latest
+FROM quay.io/centos/centos:stream8
 ARG R_VERSION=4.0.4
 ARG CRAN_CHECKPOINT=https://packagemanager.rstudio.com/all/766976
 
