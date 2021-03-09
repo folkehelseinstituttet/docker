@@ -1,5 +1,5 @@
-#FROM registry.access.redhat.com/ubi8/ubi-init:latest
-FROM centos:centos8
+FROM registry.access.redhat.com/ubi8/ubi-init:latest
+#FROM centos:centos8
 ARG R_VERSION=4.0.4
 
 ENV R_HOME="/opt/R/${R_VERSION}/lib/R"
