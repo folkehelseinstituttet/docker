@@ -7,6 +7,7 @@ export R_VERSION=4.0.2
 # This is very important, because R package pool 0.1.6 (released 2021-01-14) does not
 # work with dbplyr, which means the shiny server can't access the database
 export CRAN_CHECKPOINT=https://packagemanager.rstudio.com/all/__linux__/focal/766976
+export CRAN_CHECKPOINT=https://packagemanager.rstudio.com/all/cran/2021-01-21
 
 # get checkpoint IDs here:
 # https://packagemanager.rstudio.com/client/#/repos/1/overview
