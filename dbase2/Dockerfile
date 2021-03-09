@@ -65,6 +65,10 @@ RUN dnf -y update && \
     libgit2-devel \
     harfbuzz-devel \
     fribidi-devel \
+    freetype-devel \
+    libpng-devel \
+    libtiff-devel \
+    libjpeg-turbo-devel \
     && \
     dnf clean all
 
