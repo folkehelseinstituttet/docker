@@ -66,6 +66,7 @@ RUN dnf -y update && \
     libtiff-devel \
     libjpeg-turbo-devel \
     unixODBC-devel \
+    cairo-devel \
     && \
     dnf clean all
 
