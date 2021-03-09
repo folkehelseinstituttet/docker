@@ -51,6 +51,11 @@ RUN wget https://cdn.rstudio.com/r/centos-8/pkgs/R-${R_VERSION}-1-1.x86_64.rpm &
 RUN  ln -s /opt/R/${R_VERSION}/lib/R/lib/libRblas.so /usr/lib64/
 
 # Install stuff
+RUN dnf -y update && \
+    dnf -y install \
+    openssl-devel && \
+    dnf clean all
+
 # install2.r
 COPY install2.r /usr/local/bin/install2.r
 
