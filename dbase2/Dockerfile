@@ -6,8 +6,9 @@ ENV R_HOME="/opt/R/${R_VERSION}/lib/R"
 ENV OS_IDENTIFIER=ubuntu-2004
 ENV DEBIAN_FRONTEND noninteractive
 
+RUN apt-get update -y
+
 # Locale configuration --------------------------------------------------------#
-RUN apt-get update
 #RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
