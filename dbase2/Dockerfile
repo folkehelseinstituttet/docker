@@ -103,7 +103,7 @@ RUN dnf -y update && \
     glpk-devel \
     libreoffice-core \
     libreoffice-writer \
-    libreoffice-kit \
+    libreofficekit \
     && \
     dnf clean all
 
