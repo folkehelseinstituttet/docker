@@ -86,7 +86,10 @@ RUN apt-get update && apt-get install -y \
     netcdf-bin \
     libsodium-dev \
     libglpk-dev \
-    tex-common
+    tex-common \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    libgit2-dev
 
 # libreoffice
 RUN apt-get update && apt-get install -y libreoffice
