@@ -17,12 +17,6 @@ ENV LC_ALL en_US.UTF-8
 # Set default timezone
 ENV TZ UTC
 
-RUN dnf install -y dnf-plugins-core
-RUN dnf install -y epel-release
-RUN dnf module -y enable nodejs:13
-RUN dnf config-manager --set-enabled powertools
-RUN dnf install -y --disableplugin=subscription-manager sudo
-
 RUN apt-get install -y \
     apt-transport-https \
     curl \
