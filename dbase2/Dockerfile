@@ -61,6 +61,10 @@ RUN  ln -s /opt/R/${R_VERSION}/lib/R/lib/libRblas.so /usr/lib64/
 # Install stuff
 RUN dnf -y update && \
     dnf -y install \
+    dejavu-sants-mono-fonts \
+    libqp \
+    psmisc \
+    sqlite \
     openssl-devel \
     libxml2-devel \
     fontconfig-devel \
@@ -97,8 +101,13 @@ RUN dnf -y update && \
     netcdf-devel \
     netcdf \
     glpk-devel \
+    libreoffice
     && \
     dnf clean all
+
+# libreoffice
+RUN sudo echo /usr/lib/libreoffice/program/ >> /etc/ld.so.conf.d/local.conf
+RUN /sbin/ldconfig
 
 # install2.r
 COPY install2.r /usr/local/bin/install2.r
@@ -160,5 +169,153 @@ RUN texhash
 
 RUN tlmgr install \
   collection-latexextra
+
+# data.table doesn't like clang
+RUN install2.r --error --skipinstalled -d TRUE -n 6 \
+    data.table \
+    influenceR \
+    gower \
+    ggrepel \
+    lme4 \
+    arm \
+    gmailr \
+    pander \
+    httpuv \
+    ggpubr \
+    rio \
+    foreach
+
+RUN install2.r --error --skipinstalled -d TRUE -n 6 \
+    surveillance \
+    munsell \
+    RColorBrewer \
+    labeling \
+    htmltools \
+    evaluate \
+    R.utils \
+    openxlsx \
+    splitstackshape \
+    corrr \
+    ggdendro \
+    ClustOfVar \
+    plumber \
+    knitcitations \
+    bibtex \
+    brew \
+    Hmisc \
+    ggvis \
+    Formula \
+    roxygen2 \
+    packrat \
+    rms \
+    survey \
+    miniCRAN \
+    MatrixModels \
+    shiny \
+    flexdashboard \
+    pomp \
+    xgboost \
+    directlabels \
+    rstan \
+    shinystan \
+    ineq \
+    lomb \
+    rmarkdown \
+    shinyBS \
+    rgeolocate \
+    glm2 \
+    zip \
+    doSNOW \
+    drat \
+    profvis \
+    glmnet \
+    glmnetUtils \
+    pscl \
+    knitr \
+    bookdown \
+    reticulate \
+    processx
+
+RUN install2.r --error --skipinstalled -d TRUE -n 6 \
+    survminer \
+    units \
+    rgdal \
+    rgeos \
+    geojsonio \
+    rmapshaper \
+    styler \
+    uuid \
+    captioner \
+    pkgdown \
+    blastula \
+    RMariaDB \
+    pool \
+    memoise \
+    pbmcapply \
+    lemon \
+    GPArotation \
+    xlsx \
+    kableExtra \
+    cowplot \
+    GADMTools \
+    mapproj \
+    blogdown \
+    RcppProgress \
+    fancycut \
+    odbc \
+    pbapply \
+    ncdf4 \
+    huxtable \
+    svglite \
+    shinydashboard \
+    rsvg \
+    missRanger \
+    drc \
+    EnvStats \
+    RcppRoll \
+    mclust \
+    mem
+
+RUN install2.r --error --skipinstalled -d FALSE -n 6 \
+    DescTools \
+    ppcor \
+    corpcor \
+    GeneNet \
+    ggpubr
+
+RUN install2.r --error --skipinstalled -d TRUE -n 6 \
+    samplingbook \
+    writexl \
+    dlnm \
+    mvmeta \
+    pbs \
+    epitrix \
+    gh \
+    future \
+    future.callr \
+    future.apply \
+    pryr \
+    doFuture \
+    pinp \
+    egg \
+    EpiEstim \
+    epitrix \
+    shinycssloaders \
+    globals \
+    listenv \
+    learnr \
+    FluMoDL \
+    RODBC \
+    tableHTML \
+    htmlTable \
+    qs \
+    distill \
+    testthat \
+    progressr \
+    XML \
+    encryptr
+
+#  INLA
+RUN R -e "install.packages('INLA', repos=c(getOption('repos'), INLA='https://inla.r-inla-download.org/R/stable'), dep=FALSE)"
 
 CMD ["R"]
