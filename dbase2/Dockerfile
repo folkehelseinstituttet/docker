@@ -4,8 +4,12 @@ ARG R_VERSION=4.0.4
 ARG CRAN_CHECKPOINT=https://packagemanager.rstudio.com/all/766976
 
 ENV R_HOME="/opt/R/${R_VERSION}/lib/R"
-# Set default locale
+
+# Locale configuration --------------------------------------------------------#
+RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 # Set default timezone
 ENV TZ UTC
@@ -69,6 +73,13 @@ RUN dnf -y update && \
     unixODBC-devel \
     cairo-devel \
     libsodium-devel \
+    xz \
+    bzip2 \
+    ca-certificates \
+    git \
+    openssl-devel \
+    libuser \
+    rrdtool \
     && \
     dnf clean all
 
@@ -87,5 +98,50 @@ RUN ln -s $R_HOME/library/littler/bin/r /usr/local/bin/r
 RUN install2.r --error --skipinstalled -d TRUE -n 6 \
     tinytex \
     devtools
+
+# tinytex needed packages
+RUN tlmgr update --self
+RUN tlmgr install \
+    svg \
+    koma-script \
+    trimspaces \
+    xcolor \
+    fancyhdr \
+    blindtext \
+    background \
+    pgf \
+    everypage \
+    datetime \
+    fmtcount \
+    float \
+    tufte-latex \
+    hardwrap \
+    titlesec \
+    textcase \
+    setspace \
+    units \
+    ulem \
+    morefloats \
+    xifthen \
+    ec \
+    multirow \
+    hyphen-norwegian \
+    palatino \
+    mathpazo \
+    fpl \
+    babel-norsk \
+    siunitx \
+    pgf \
+    algorithms \
+    algorithmicx \
+    mathdesign \
+    ly1 \
+    charter
+RUN tlmgr update --all
+
+RUN texhash
+
+RUN tlmgr install \
+  collection-latexextra
 
 CMD ["R"]
