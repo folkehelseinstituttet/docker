@@ -96,7 +96,7 @@ RUN dnf -y update && \
     cargo \
     netcdf-devel \
     netcdf \
-    glpk-devel
+    glpk-devel \
     && \
     dnf clean all
 
