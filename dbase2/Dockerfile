@@ -101,13 +101,15 @@ RUN dnf -y update && \
     netcdf-devel \
     netcdf \
     glpk-devel \
-    libreoffice
+    libreoffice-core \
+    libreoffice-writer \
+    libreoffice-kit \
     && \
     dnf clean all
 
 # libreoffice
-RUN sudo echo /usr/lib/libreoffice/program/ >> /etc/ld.so.conf.d/local.conf
-RUN /sbin/ldconfig
+#RUN sudo echo /usr/lib/libreoffice/program/ >> /etc/ld.so.conf.d/local.conf
+#RUN /sbin/ldconfig
 
 # install2.r
 COPY install2.r /usr/local/bin/install2.r
