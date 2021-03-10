@@ -1,5 +1,6 @@
 #FROM registry.access.redhat.com/ubi8/ubi-init:latest
 FROM quay.io/centos/centos:stream8
+#FROM quay.io/centos/centos:centos8
 ARG R_VERSION=4.0.4
 ARG CRAN_CHECKPOINT=https://packagemanager.rstudio.com/all/766976
 
@@ -15,7 +16,9 @@ ENV LC_ALL en_US.UTF-8
 # Set default timezone
 ENV TZ UTC
 
+RUN dnf install -y dnf-plugins-core
 RUN dnf install -y epel-release
+RUN dnf module -y enable nodejs:13
 RUN dnf config-manager --set-enabled powertools
 RUN dnf install -y --disableplugin=subscription-manager sudo
 
@@ -103,6 +106,11 @@ RUN dnf -y update && \
     libreoffice-core \
     libreoffice-writer \
     libreofficekit \
+    protobuf-devel \
+    ImageMagick-c++-devel \
+    libXt-devel \
+    v8-devel \
+    jq-devel \
     && \
     dnf clean all
 
@@ -217,8 +225,6 @@ RUN install2.r --error --skipinstalled -d TRUE -n 6 \
     pomp \
     xgboost \
     directlabels \
-    rstan \
-    shinystan \
     ineq \
     lomb \
     rmarkdown \
@@ -315,6 +321,10 @@ RUN install2.r --error --skipinstalled -d TRUE -n 6 \
     progressr \
     XML \
     encryptr
+
+#RUN install2.r --error --skipinstalled -d TRUE -n 6 \
+#    rstan \
+#    shinystan \
 
 #  INLA
 RUN R -e "install.packages('INLA', repos=c(getOption('repos'), INLA='https://inla.r-inla-download.org/R/stable'), dep=FALSE)"
