@@ -110,7 +110,7 @@ RUN dnf -y update && \
     ImageMagick-c++-devel \
     libXt-devel \
     v8-devel \
-    jq-devel \
+    jq \
     && \
     dnf clean all
 
