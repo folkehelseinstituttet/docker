@@ -9,7 +9,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -y
 
 # Locale configuration --------------------------------------------------------#
-#RUN localedef -i en_US -f UTF-8 en_US.UTF-8
+RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
@@ -61,9 +61,6 @@ RUN wget https://cdn.rstudio.com/r/${OS_IDENTIFIER}/pkgs/r-${R_VERSION}_1_amd64.
 
 # Install stuff
 RUN apt-get update && apt-get install -y \
-  tex-common
-
-  RUN apt-get update && apt-get install -y \
     git \
     libgdal-dev \
     libgeos-c1v5 \
