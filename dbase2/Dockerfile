@@ -89,7 +89,9 @@ RUN apt-get update && apt-get install -y \
     tex-common \
     libharfbuzz-dev \
     libfribidi-dev \
-    libgit2-dev
+    libgit2-dev \
+    libv8-dev \
+    libmagick++-dev
 
 # libreoffice
 RUN apt-get update && apt-get install -y libreoffice
@@ -171,6 +173,9 @@ RUN install2.r --error --skipinstalled -d TRUE -n 6 \
     ggpubr \
     rio \
     foreach
+
+#  INLA
+RUN R -e "install.packages('INLA', repos=c(getOption('repos'), INLA='https://inla.r-inla-download.org/R/stable'), dep=FALSE)"
 
 RUN install2.r --error --skipinstalled -d TRUE -n 6 \
     surveillance \
@@ -303,8 +308,5 @@ RUN install2.r --error --skipinstalled -d TRUE -n 6 \
 #RUN install2.r --error --skipinstalled -d TRUE -n 6 \
 #    rstan \
 #    shinystan \
-
-#  INLA
-# RUN R -e "install.packages('INLA', repos=c(getOption('repos'), INLA='https://inla.r-inla-download.org/R/stable'), dep=FALSE)"
 
 CMD ["R"]
