@@ -7,9 +7,7 @@ ENV OS_IDENTIFIER=ubuntu-2004
 ENV DEBIAN_FRONTEND noninteractive
 
 # Locale configuration --------------------------------------------------------#
-RUN apt-get update -qq && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    glibc-locale-source
+RUN apt-get update
 #RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
