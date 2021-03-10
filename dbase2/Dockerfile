@@ -6,6 +6,7 @@ ARG CRAN_CHECKPOINT=https://packagemanager.rstudio.com/all/766976
 ENV R_HOME="/opt/R/${R_VERSION}/lib/R"
 
 # Locale configuration --------------------------------------------------------#
+RUN dnf -y install glibc-locale-source
 RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
