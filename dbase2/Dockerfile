@@ -59,9 +59,6 @@ RUN wget https://cdn.rstudio.com/r/centos-8/pkgs/R-${R_VERSION}-1-1.x86_64.rpm &
 RUN  ln -s /opt/R/${R_VERSION}/lib/R/lib/libRblas.so /usr/lib64/
 
 # Install stuff
-RUN wget http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/poppler-0.66.0-27.el8.x86_64.rpm && \
-    dnf -y install ./poppler-0.66.0-27.el8.x86_64.rpm
-
 RUN dnf -y update && \
     dnf -y install \
     openssl-devel \
@@ -84,12 +81,10 @@ RUN dnf -y update && \
     openssl-devel \
     libuser \
     rrdtool \
-
     git \
     # gdal-dev \
     geos \
     proj-devel \
-    rotobuf-devel \
     protobuf-compiler \
     ncftp \
     ftp \
