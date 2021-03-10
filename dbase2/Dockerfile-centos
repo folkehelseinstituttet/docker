@@ -1,15 +1,14 @@
+#FROM registry.access.redhat.com/ubi8/ubi-init:latest
+#FROM quay.io/centos/centos:stream8
+#FROM quay.io/centos/centos:centos8
 FROM ubuntu:focal
 ARG R_VERSION=4.0.4
 ARG CRAN_CHECKPOINT=https://packagemanager.rstudio.com/all/766976
 
 ENV R_HOME="/opt/R/${R_VERSION}/lib/R"
-ENV OS_IDENTIFIER=ubuntu-2004
-ENV DEBIAN_FRONTEND noninteractive
 
 # Locale configuration --------------------------------------------------------#
-RUN apt-get update -qq && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    glibc-locale-source
+RUN dnf -y install glibc-locale-source
 RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
@@ -24,18 +23,16 @@ RUN dnf module -y enable nodejs:13
 RUN dnf config-manager --set-enabled powertools
 RUN dnf install -y --disableplugin=subscription-manager sudo
 
-RUN apt-get install -y \
-    apt-transport-https \
-    curl \
+RUN dnf -y update && \
+    dnf -y install \
     fontconfig \
-    libcurl4-openssl-dev \
-    locales \
-    perl \
+    glibc-langpack-en \
+    perl-Digest-MD5 \
+    perl-Getopt-Long \
     sudo \
-    tzdata \
-    wget \
-    vim && \
-    rm -rf /var/lib/apt/lists/*
+    vim \
+    wget && \
+    dnf clean all
 
 # Install TinyTeX
 RUN wget -qO- "https://yihui.org/tinytex/install-bin-unix.sh" | sh && \
@@ -56,49 +53,71 @@ RUN mkdir -p /opt/pandoc && \
     ln -s /opt/pandoc/pandoc-citeproc /usr/bin/pandoc-citeproc
 
 # Install R
-RUN wget https://cdn.rstudio.com/r/${OS_IDENTIFIER}/pkgs/r-${R_VERSION}_1_amd64.deb && \
-    apt-get update -qq && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -f -y ./r-${R_VERSION}_1_amd64.deb && \
+RUN wget https://cdn.rstudio.com/r/centos-8/pkgs/R-${R_VERSION}-1-1.x86_64.rpm && \
+    dnf -y install ./R-${R_VERSION}-1-1.x86_64.rpm && \
     ln -s /opt/R/${R_VERSION}/bin/R /usr/bin/R && \
     ln -s /opt/R/${R_VERSION}/bin/Rscript /usr/bin/Rscript && \
     ln -s /opt/R/${R_VERSION}/lib/R /usr/lib/R && \
-    rm r-${R_VERSION}_1_amd64.deb && \
-    rm -rf /var/lib/apt/lists/*
-#RUN  ln -s /opt/R/${R_VERSION}/lib/R/lib/libRblas.so /usr/lib64/
+    rm R-${R_VERSION}-1-1.x86_64.rpm && \
+    dnf clean all
+RUN  ln -s /opt/R/${R_VERSION}/lib/R/lib/libRblas.so /usr/lib64/
 
 # Install stuff
-RUN apt-get update && apt-get install -y \
-  git \
-  libgdal-dev \
-  libgeos-c1v5 \
-  libproj-dev \
-  libgsl0-dev \
-  libprotobuf-dev \
-  protobuf-compiler \
-  ncftp \
-  ftp \
-  cron \
-  sshpass \
-  libglu1-mesa-dev \
-  freeglut3-dev \
-  mesa-common-dev \
-  libudunits2-dev \
-  libjq-dev \
-  libssl-dev \
-  libomp-dev \
-  tk \
-  dvipng \
-  tk-dev \
-  cargo \
-  libnetcdf-dev \
-  netcdf-bin \
-  libsodium-dev \
-  libglpk-dev
+RUN dnf -y update && \
+    dnf -y install \
+    dejavu-sans-mono-fonts \
+    psmisc \
+    sqlite \
+    openssl-devel \
+    libxml2-devel \
+    fontconfig-devel \
+    libgit2-devel \
+    harfbuzz-devel \
+    fribidi-devel \
+    freetype-devel \
+    libpng-devel \
+    libtiff-devel \
+    libjpeg-turbo-devel \
+    unixODBC-devel \
+    cairo-devel \
+    libsodium-devel \
+    xz \
+    bzip2 \
+    ca-certificates \
+    git \
+    openssl-devel \
+    libuser \
+    rrdtool \
+    git \
+    # gdal-dev \
+    geos \
+    proj-devel \
+    protobuf-compiler \
+    ncftp \
+    ftp \
+    sshpass \
+    udunits2-devel \
+    tk \
+    dvipng \
+    tk-devel \
+    cargo \
+    netcdf-devel \
+    netcdf \
+    glpk-devel \
+    libreoffice-core \
+    libreoffice-writer \
+    libreofficekit \
+    protobuf-devel \
+    ImageMagick-c++-devel \
+    libXt-devel \
+    v8-devel \
+    jq \
+    && \
+    dnf clean all
 
 # libreoffice
-RUN apt-get update && apt-get install -y libreoffice
-RUN sudo echo /usr/lib/libreoffice/program/ >> /etc/ld.so.conf.d/local.conf
-RUN /sbin/ldconfig
+#RUN sudo echo /usr/lib/libreoffice/program/ >> /etc/ld.so.conf.d/local.conf
+#RUN /sbin/ldconfig
 
 # install2.r
 COPY install2.r /usr/local/bin/install2.r
@@ -309,6 +328,6 @@ RUN install2.r --error --skipinstalled -d TRUE -n 6 \
 #    shinystan \
 
 #  INLA
-# RUN R -e "install.packages('INLA', repos=c(getOption('repos'), INLA='https://inla.r-inla-download.org/R/stable'), dep=FALSE)"
+RUN R -e "install.packages('INLA', repos=c(getOption('repos'), INLA='https://inla.r-inla-download.org/R/stable'), dep=FALSE)"
 
 CMD ["R"]
