@@ -61,8 +61,7 @@ RUN  ln -s /opt/R/${R_VERSION}/lib/R/lib/libRblas.so /usr/lib64/
 # Install stuff
 RUN dnf -y update && \
     dnf -y install \
-    dejavu-sants-mono-fonts \
-    libqp \
+    dejavu-sans-mono-fonts \
     psmisc \
     sqlite \
     openssl-devel \
