@@ -61,32 +61,36 @@ RUN wget https://cdn.rstudio.com/r/${OS_IDENTIFIER}/pkgs/r-${R_VERSION}_1_amd64.
 
 # Install stuff
 RUN apt-get update && apt-get install -y \
-  git \
-  libgdal-dev \
-  libgeos-c1v5 \
-  libproj-dev \
-  libgsl0-dev \
-  libprotobuf-dev \
-  protobuf-compiler \
-  ncftp \
-  ftp \
-  cron \
-  sshpass \
-  libglu1-mesa-dev \
-  freeglut3-dev \
-  mesa-common-dev \
-  libudunits2-dev \
-  libjq-dev \
-  libssl-dev \
-  libomp-dev \
-  tk \
-  dvipng \
-  tk-dev \
-  cargo \
-  libnetcdf-dev \
-  netcdf-bin \
-  libsodium-dev \
-  libglpk-dev
+  tex-common
+
+  RUN apt-get update && apt-get install -y \
+    git \
+    libgdal-dev \
+    libgeos-c1v5 \
+    libproj-dev \
+    libgsl0-dev \
+    libprotobuf-dev \
+    protobuf-compiler \
+    ncftp \
+    ftp \
+    cron \
+    sshpass \
+    libglu1-mesa-dev \
+    freeglut3-dev \
+    mesa-common-dev \
+    libudunits2-dev \
+    libjq-dev \
+    libssl-dev \
+    libomp-dev \
+    tk \
+    dvipng \
+    tk-dev \
+    cargo \
+    libnetcdf-dev \
+    netcdf-bin \
+    libsodium-dev \
+    libglpk-dev \
+    tex-common
 
 # libreoffice
 RUN apt-get update && apt-get install -y libreoffice
