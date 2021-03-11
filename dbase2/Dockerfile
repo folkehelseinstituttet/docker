@@ -60,6 +60,7 @@ RUN wget https://cdn.rstudio.com/r/${OS_IDENTIFIER}/pkgs/r-${R_VERSION}_1_amd64.
 
 # Install stuff
 RUN apt-get update && apt-get install -y \
+    gdebi-core \
     git \
     libgdal-dev \
     libgeos-c1v5 \
