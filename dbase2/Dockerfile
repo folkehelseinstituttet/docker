@@ -5,6 +5,7 @@ ARG CRAN_CHECKPOINT=https://packagemanager.rstudio.com/all/766976
 ENV R_HOME="/opt/R/${R_VERSION}/lib/R"
 ENV OS_IDENTIFIER=ubuntu-2004
 ENV DEBIAN_FRONTEND noninteractive
+ENV TZ="Europe/Oslo"
 
 # Locale configuration --------------------------------------------------------#
 RUN apt-get clean && apt-get update && apt-get install -y locales
