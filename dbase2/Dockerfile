@@ -26,11 +26,14 @@ RUN apt-get install -y \
     sudo \
     tzdata \
     wget \
-    vim && \
+    vim \
+    gnupg \
+    krb5-user \
+    sssd-krb5 \
+    && \
     rm -rf /var/lib/apt/lists/*
 
 # MSSQL drivers
-RUN apt-get install --yes apt-transport-https curl gnupg
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && curl https://packages.microsoft.com/config/ubuntu/19.10/prod.list > /etc/apt/sources.list.d/mssql-release.list \
   && apt-get update \
@@ -43,10 +46,6 @@ RUN ACCEPT_EULA=Y DEBIAN_FRONTEND=noninteractive apt-get install --yes mssql-too
 RUN echo PATH="$PATH:/opt/mssql-tools/bin" >> /etc/profile
 RUN echo export PATH >> /etc/profile
 RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> /usr/local/lib/R/etc/Rprofile.site
-
-# ------krb5-------
-# install
-RUN apt install --yes krb5-user sssd-krb5
 
 # Install TinyTeX
 RUN wget -qO- "https://yihui.org/tinytex/install-bin-unix.sh" | sh && \
