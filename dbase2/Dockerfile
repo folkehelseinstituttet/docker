@@ -45,7 +45,6 @@ RUN ACCEPT_EULA=Y DEBIAN_FRONTEND=noninteractive apt-get install --yes mssql-too
 # bcp
 RUN echo PATH="$PATH:/opt/mssql-tools/bin" >> /etc/profile
 RUN echo export PATH >> /etc/profile
-RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> /usr/local/lib/R/etc/Rprofile.site
 
 # Install TinyTeX
 RUN wget -qO- "https://yihui.org/tinytex/install-bin-unix.sh" | sh && \
@@ -125,6 +124,8 @@ COPY install2.r /usr/local/bin/install2.r
 RUN echo 'dratRepo="/git/drat/"' >> $R_HOME/etc/Rprofile.site
 # Add our repo list on second line
 RUN echo "options(repos = c(folkehelseinstituttet='https://folkehelseinstituttet.github.io/drat/',euromomo='https://euromomonetwork.github.io/drat/',raubreywhite='https://raubreywhite.github.io/drat/',CRAN = '$CRAN_CHECKPOINT'), download.file.method = 'libcurl')" >> $R_HOME/etc/Rprofile.site
+# get bcp to work from inside R
+RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> $R_HOME/etc/Rprofile.site
 
 RUN Rscript -e "install.packages(c('littler','docopt'))"
 RUN ln -s $R_HOME/library/littler/bin/r /usr/local/bin/r
