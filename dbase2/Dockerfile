@@ -37,7 +37,7 @@ RUN apt-get install -y \
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && curl https://packages.microsoft.com/config/ubuntu/19.10/prod.list > /etc/apt/sources.list.d/mssql-release.list \
   && apt-get update \
-  && ACCEPT_EULA=Y apt-get install --yes --no-install-recommends msodbcsql17 \
+  && ACCEPT_EULA=Y apt-get install --yes --no-install-recommends msodbcsql17
 
 # bcp for copying data directly to MSSQL
 RUN ACCEPT_EULA=Y DEBIAN_FRONTEND=noninteractive apt-get install --yes mssql-tools
