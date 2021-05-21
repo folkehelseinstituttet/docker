@@ -5,7 +5,6 @@ ARG CRAN_CHECKPOINT=https://packagemanager.rstudio.com/all/766976
 ENV R_HOME="/opt/R/${R_VERSION}/lib/R"
 ENV OS_IDENTIFIER=ubuntu-2004
 ENV DEBIAN_FRONTEND noninteractive
-ENV TZ="Europe/Oslo"
 
 # Locale configuration --------------------------------------------------------#
 RUN apt-get clean && apt-get update && apt-get install -y locales
@@ -15,7 +14,9 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 # Set default timezone
-ENV TZ UTC
+ENV TZ="Europe/Oslo"
+RUN echo TZ="Europe/Oslo" >> /etc/profile
+
 
 RUN apt-get install -y \
     apt-transport-https \
@@ -127,6 +128,8 @@ RUN echo 'dratRepo="/git/drat/"' >> $R_HOME/etc/Rprofile.site
 RUN echo "options(repos = c(folkehelseinstituttet='https://folkehelseinstituttet.github.io/drat/',euromomo='https://euromomonetwork.github.io/drat/',raubreywhite='https://raubreywhite.github.io/drat/',CRAN = '$CRAN_CHECKPOINT'), download.file.method = 'libcurl')" >> $R_HOME/etc/Rprofile.site
 # get bcp to work from inside R
 RUN echo Sys.setenv\(PATH=\"$PATH:/opt/mssql-tools/bin\"\) >> $R_HOME/etc/Rprofile.site
+# Set TZ
+RUN echo Sys.setenv\(TZ=\"Europe/Oslo\"\) >> $R_HOME/etc/Rprofile.site
 
 RUN Rscript -e "install.packages(c('littler','docopt'))"
 RUN ln -s $R_HOME/library/littler/bin/r /usr/local/bin/r
