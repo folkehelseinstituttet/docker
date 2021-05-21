@@ -329,4 +329,16 @@ RUN install2.r --error --skipinstalled -d TRUE -n 6 \
 #    rstan \
 #    shinystan \
 
+# https://stackoverflow.com/questions/57265913/error-tcp-provider-error-code-0x2746-during-the-sql-setup-in-linux-through-te
+# https://askubuntu.com/questions/1233186/ubuntu-20-04-how-to-set-lower-ssl-security-level
+RUN sed -i '1 i\openssl_conf = default_conf' /etc/ssl/openssl.cnf
+RUN echo "[ default_conf ]" >> /etc/ssl/openssl.cnf
+RUN echo "ssl_conf = ssl_sect" >> /etc/ssl/openssl.cnf
+RUN echo "[ssl_sect]" >> /etc/ssl/openssl.cnf
+RUN echo "system_default = ssl_default_sect" >> /etc/ssl/openssl.cnf
+RUN echo "[ssl_default_sect]" >> /etc/ssl/openssl.cnf
+RUN echo "MinProtocol = TLSv1.2" >> /etc/ssl/openssl.cnf
+RUN echo "CipherString = DEFAULT:@SECLEVEL=1" >> /etc/ssl/openssl.cnf
+
+
 CMD ["R"]
