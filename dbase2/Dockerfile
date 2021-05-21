@@ -330,4 +330,23 @@ RUN install2.r --error --skipinstalled -d TRUE -n 6 \
 #    rstan \
 #    shinystan \
 
+# reticulate, python, and marrow mailer
+RUN echo "RETICULATE_MINICONDA_ENABLED=FALSE" >> $R_HOME/etc/Renviron
+RUN apt-get install -y python3 python3-pip
+# https://github.com/marrow/mailer/issues/87
+RUN python3 -m pip install --upgrade git+https://github.com/LexMachinaInc/mailer.git
+RUN python3 -m pip install --upgrade git+https://github.com/LexMachinaInc/util.git
+
+# https://stackoverflow.com/questions/57265913/error-tcp-provider-error-code-0x2746-during-the-sql-setup-in-linux-through-te
+# https://askubuntu.com/questions/1233186/ubuntu-20-04-how-to-set-lower-ssl-security-level
+RUN sed -i '1 i\openssl_conf = default_conf' /etc/ssl/openssl.cnf
+RUN echo "[ default_conf ]" >> /etc/ssl/openssl.cnf
+RUN echo "ssl_conf = ssl_sect" >> /etc/ssl/openssl.cnf
+RUN echo "[ssl_sect]" >> /etc/ssl/openssl.cnf
+RUN echo "system_default = ssl_default_sect" >> /etc/ssl/openssl.cnf
+RUN echo "[ssl_default_sect]" >> /etc/ssl/openssl.cnf
+RUN echo "MinProtocol = TLSv1.2" >> /etc/ssl/openssl.cnf
+RUN echo "CipherString = DEFAULT:@SECLEVEL=1" >> /etc/ssl/openssl.cnf
+
+
 CMD ["R"]
