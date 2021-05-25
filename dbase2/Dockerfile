@@ -31,6 +31,8 @@ RUN apt-get install -y \
     gnupg \
     krb5-user \
     sssd-krb5 \
+    default-jre \
+    default-jdk \
     && \
     rm -rf /var/lib/apt/lists/*
 
@@ -79,6 +81,9 @@ RUN wget https://cdn.rstudio.com/r/${OS_IDENTIFIER}/pkgs/r-${R_VERSION}_1_amd64.
     rm r-${R_VERSION}_1_amd64.deb && \
     rm -rf /var/lib/apt/lists/*
 #RUN  ln -s /opt/R/${R_VERSION}/lib/R/lib/libRblas.so /usr/lib64/
+
+# fix rJava config
+RUN R CMD javareconf
 
 # Install stuff
 RUN apt-get update && apt-get install -y \
