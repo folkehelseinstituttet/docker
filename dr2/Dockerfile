@@ -5,6 +5,10 @@ MAINTAINER "Carl Boettiger and Dirk Eddelbuettel" rocker-maintainers@eddelbuette
 # update
 RUN apt-get update -y
 
+# pandoc https://github.com/jgm/pandoc/releases/tag/2.13
+COPY pandoc-2.13-1-amd64.deb
+sudo dpkg -i pandoc-2.13-1-amd64.deb
+
 # TEMPORARY SOLUTIONS UNTIL THE PACKAGE MAKES ITS WAY TO CRAN
 # RUN R -e 'devtools::install_github("HenrikBengtsson/progressr")'
 # RUN R -e 'devtools::install_github("rstudio/plumber")'
