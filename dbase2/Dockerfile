@@ -17,7 +17,6 @@ ENV LC_ALL en_US.UTF-8
 ENV TZ="Europe/Oslo"
 RUN echo TZ="Europe/Oslo" >> /etc/profile
 
-
 RUN apt-get install -y \
     apt-transport-https \
     curl \
@@ -56,15 +55,19 @@ RUN wget -qO- "https://yihui.org/tinytex/install-bin-unix.sh" | sh && \
     /opt/TinyTeX/bin/*/tlmgr path add
 
 # Install pandoc
-RUN mkdir -p /opt/pandoc && \
-    wget -O /opt/pandoc/pandoc.gz https://files.r-hub.io/pandoc/linux-64/pandoc.gz && \
-    gzip -d /opt/pandoc/pandoc.gz && \
-    chmod +x /opt/pandoc/pandoc && \
-    ln -s /opt/pandoc/pandoc /usr/bin/pandoc && \
-    wget -O /opt/pandoc/pandoc-citeproc.gz https://files.r-hub.io/pandoc/linux-64/pandoc-citeproc.gz && \
-    gzip -d /opt/pandoc/pandoc-citeproc.gz && \
-    chmod +x /opt/pandoc/pandoc-citeproc && \
-    ln -s /opt/pandoc/pandoc-citeproc /usr/bin/pandoc-citeproc
+#RUN mkdir -p /opt/pandoc && \
+#    wget -O /opt/pandoc/pandoc.gz https://files.r-hub.io/pandoc/linux-64/pandoc.gz && \
+#    gzip -d /opt/pandoc/pandoc.gz && \
+#    chmod +x /opt/pandoc/pandoc && \
+#    ln -s /opt/pandoc/pandoc /usr/bin/pandoc && \
+#    wget -O /opt/pandoc/pandoc-citeproc.gz https://files.r-hub.io/pandoc/linux-64/pandoc-citeproc.gz && \
+#    gzip -d /opt/pandoc/pandoc-citeproc.gz && \
+#    chmod +x /opt/pandoc/pandoc-citeproc && \
+#    ln -s /opt/pandoc/pandoc-citeproc /usr/bin/pandoc-citeproc
+
+# pandoc https://github.com/jgm/pandoc/releases/tag/2.13
+COPY pandoc-2.13-1-amd64.deb /tmp
+sudo dpkg -i /tmp/pandoc-2.13-1-amd64.deb
 
 # Install R
 RUN wget https://cdn.rstudio.com/r/${OS_IDENTIFIER}/pkgs/r-${R_VERSION}_1_amd64.deb && \
