@@ -67,7 +67,7 @@ RUN wget -qO- "https://yihui.org/tinytex/install-bin-unix.sh" | sh && \
 
 # pandoc https://github.com/jgm/pandoc/releases/tag/2.13
 COPY pandoc-2.13-1-amd64.deb /tmp
-sudo dpkg -i /tmp/pandoc-2.13-1-amd64.deb
+RUN dpkg -i /tmp/pandoc-2.13-1-amd64.deb
 
 # Install R
 RUN wget https://cdn.rstudio.com/r/${OS_IDENTIFIER}/pkgs/r-${R_VERSION}_1_amd64.deb && \
