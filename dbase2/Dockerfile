@@ -111,7 +111,8 @@ RUN apt-get update && apt-get install -y \
     libfribidi-dev \
     libgit2-dev \
     libv8-dev \
-    libmagick++-dev
+    libmagick++-dev \
+    texinfo
 
 # libreoffice
 RUN apt-get update && apt-get install -y libreoffice
