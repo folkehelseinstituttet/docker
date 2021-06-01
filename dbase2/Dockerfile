@@ -17,7 +17,6 @@ ENV LC_ALL en_US.UTF-8
 ENV TZ="Europe/Oslo"
 RUN echo TZ="Europe/Oslo" >> /etc/profile
 
-
 RUN apt-get install -y \
     apt-transport-https \
     curl \
@@ -32,6 +31,8 @@ RUN apt-get install -y \
     gnupg \
     krb5-user \
     sssd-krb5 \
+    default-jre \
+    default-jdk \
     && \
     rm -rf /var/lib/apt/lists/*
 
@@ -56,15 +57,19 @@ RUN wget -qO- "https://yihui.org/tinytex/install-bin-unix.sh" | sh && \
     /opt/TinyTeX/bin/*/tlmgr path add
 
 # Install pandoc
-RUN mkdir -p /opt/pandoc && \
-    wget -O /opt/pandoc/pandoc.gz https://files.r-hub.io/pandoc/linux-64/pandoc.gz && \
-    gzip -d /opt/pandoc/pandoc.gz && \
-    chmod +x /opt/pandoc/pandoc && \
-    ln -s /opt/pandoc/pandoc /usr/bin/pandoc && \
-    wget -O /opt/pandoc/pandoc-citeproc.gz https://files.r-hub.io/pandoc/linux-64/pandoc-citeproc.gz && \
-    gzip -d /opt/pandoc/pandoc-citeproc.gz && \
-    chmod +x /opt/pandoc/pandoc-citeproc && \
-    ln -s /opt/pandoc/pandoc-citeproc /usr/bin/pandoc-citeproc
+#RUN mkdir -p /opt/pandoc && \
+#    wget -O /opt/pandoc/pandoc.gz https://files.r-hub.io/pandoc/linux-64/pandoc.gz && \
+#    gzip -d /opt/pandoc/pandoc.gz && \
+#    chmod +x /opt/pandoc/pandoc && \
+#    ln -s /opt/pandoc/pandoc /usr/bin/pandoc && \
+#    wget -O /opt/pandoc/pandoc-citeproc.gz https://files.r-hub.io/pandoc/linux-64/pandoc-citeproc.gz && \
+#    gzip -d /opt/pandoc/pandoc-citeproc.gz && \
+#    chmod +x /opt/pandoc/pandoc-citeproc && \
+#    ln -s /opt/pandoc/pandoc-citeproc /usr/bin/pandoc-citeproc
+
+# pandoc https://github.com/jgm/pandoc/releases/tag/2.13
+COPY pandoc-2.13-1-amd64.deb /tmp
+RUN dpkg -i /tmp/pandoc-2.13-1-amd64.deb
 
 # Install R
 RUN wget https://cdn.rstudio.com/r/${OS_IDENTIFIER}/pkgs/r-${R_VERSION}_1_amd64.deb && \
@@ -76,6 +81,9 @@ RUN wget https://cdn.rstudio.com/r/${OS_IDENTIFIER}/pkgs/r-${R_VERSION}_1_amd64.
     rm r-${R_VERSION}_1_amd64.deb && \
     rm -rf /var/lib/apt/lists/*
 #RUN  ln -s /opt/R/${R_VERSION}/lib/R/lib/libRblas.so /usr/lib64/
+
+# fix rJava config
+RUN R CMD javareconf
 
 # Install stuff
 RUN apt-get update && apt-get install -y \
@@ -112,7 +120,8 @@ RUN apt-get update && apt-get install -y \
     libgit2-dev \
     libv8-dev \
     libmagick++-dev \
-    texinfo
+    texinfo \
+    jags
 
 # libreoffice
 RUN apt-get update && apt-get install -y libreoffice
