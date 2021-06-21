@@ -13,4 +13,4 @@ sudo podman build \
 --build-arg CRAN_CHECKPOINT=$CRAN_CHECKPOINT \
 $WORKSPACE/dbase2
 
-podman tag fhix/dbase2:$R_VERSION fhix/dbase:$R_VERSION
+sudo podman tag fhix/dbase2:$R_VERSION fhix/dbase:$R_VERSION
