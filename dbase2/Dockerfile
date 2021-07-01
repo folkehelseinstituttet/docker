@@ -338,7 +338,8 @@ RUN install2.r --error --skipinstalled -d TRUE -n 6 \
     testthat \
     progressr \
     XML \
-    encryptr
+    encryptr \
+    precommit
 
 #RUN install2.r --error --skipinstalled -d TRUE -n 6 \
 #    rstan \
@@ -350,6 +351,9 @@ RUN apt-get install -y python3 python3-pip
 # https://github.com/marrow/mailer/issues/87
 RUN python3 -m pip install --upgrade git+https://github.com/LexMachinaInc/mailer.git
 RUN python3 -m pip install --upgrade git+https://github.com/LexMachinaInc/util.git
+
+# https://github.com/lorenzwalthert/precommit
+RUN python3 -m pip install --upgrade pre-commit
 
 # https://stackoverflow.com/questions/57265913/error-tcp-provider-error-code-0x2746-during-the-sql-setup-in-linux-through-te
 # https://askubuntu.com/questions/1233186/ubuntu-20-04-how-to-set-lower-ssl-security-level
