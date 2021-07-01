@@ -1,5 +1,5 @@
 ARG R_VERSION=R_VERSION
-FROM fhix/dbase2:${R_VERSION}
+FROM localhost/fhix/dbase2:${R_VERSION}
 MAINTAINER "Carl Boettiger and Dirk Eddelbuettel" rocker-maintainers@eddelbuettel.com
 
 # update
