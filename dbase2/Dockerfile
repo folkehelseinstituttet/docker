@@ -122,7 +122,8 @@ RUN apt-get update && apt-get install -y \
     libmagick++-dev \
     texinfo \
     jags \
-    rsync
+    rsync \
+    libpoppler-cpp-dev
 
 # libreoffice
 RUN apt-get update && apt-get install -y libreoffice
@@ -339,7 +340,9 @@ RUN install2.r --error --skipinstalled -d TRUE -n 6 \
     progressr \
     XML \
     encryptr \
-    precommit
+    precommit \
+    readtext \
+    postcards
 
 #RUN install2.r --error --skipinstalled -d TRUE -n 6 \
 #    rstan \
